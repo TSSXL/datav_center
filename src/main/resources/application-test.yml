@@ -1,0 +1,27 @@
+server:
+  port: 8080
+spring:
+  data:
+    mongodb:
+      host: 192.168.10.12
+      port: 31423
+      database: cityos-visualization
+      username: portal
+      password: portal@2017
+  http:
+    multipart:
+      max-file-size: 16MB
+      max-request-size: 16MB
+  application :
+    name: "datav"
+
+application:
+  cors:
+    allowed-origins: "*"
+    allowed-methods: "GET, PUT, POST, DELETE, OPTIONS"
+    allowed-headers: "*"
+    exposed-headers: "X-Total-Count"
+  async:
+    corePoolSize: 2
+    maxPoolSize: 50
+    queueCapacity: 1000

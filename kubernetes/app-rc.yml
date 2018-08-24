@@ -18,4 +18,4 @@ spec:
         image: reg.icity-os.com/smart-cityos/datav_center:1.0
         imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 8080
