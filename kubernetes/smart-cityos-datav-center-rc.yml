@@ -1,21 +1,21 @@
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: datav_center
+  name: datav-center
   labels:
-    name: datav_center
+    name: datav-center
 spec:
   replicas: 1
   selector:
-    name: datav_center
+    name: datav-center
   template:
     metadata:
       labels:
-        name: datav_center
+        name: datav-center
     spec:
       containers:
-      - name: datav_center
-        image: reg.icity-os.com/smart-cityos/datav_center:1.0
+      - name: datav-center
+        image: reg.icity-os.com/smart-cityos/datav-center:1.0
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
