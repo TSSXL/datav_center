@@ -106,7 +106,7 @@
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>0.4.10</version>
 				<configuration>
-					<imageName>reg.icity-os.com/smart-cityos/common:${project.version}</imageName>
+					<imageName>reg.icity-os.com/smart-cityos/datav_center:${project.version}</imageName>
 					<dockerDirectory>src/main/docker</dockerDirectory>
 					<resources>
 						<resource>

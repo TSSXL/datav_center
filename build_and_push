@@ -1,7 +1,0 @@
-#!/bin/bash
-if [ $? -eq 0 ]; then
-  docker build -t reg.icity-os.com/smart-cityos/datav_center:1.0 .
-  docker push reg.icity-os.com/smart-cityos/datav_center:1.0
-else
-  exit 1
-fi
