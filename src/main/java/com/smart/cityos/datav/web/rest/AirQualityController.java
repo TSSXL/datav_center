@@ -47,7 +47,7 @@ public class AirQualityController {
     }
 
     @ApiOperation("根据日历获取AQI数据列表")
-    @GetMapping(value = "/calendaraqi")
+    @GetMapping(value = "/aqicalendar")
     public List<Integer> getCalendarAQIl() {
         return airQualityService.getCalendarAQIl();
     }
