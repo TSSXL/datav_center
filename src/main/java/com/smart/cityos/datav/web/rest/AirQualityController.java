@@ -46,9 +46,9 @@ public class AirQualityController {
         return airQualityService.get7DaysAQITrend();
     }
 
-    @ApiOperation("根据日历获取降雨量数据列表")
-    @GetMapping(value = "/rainfall")
-    public List<Integer> getRainfall() {
-        return airQualityService.getRainfall();
+    @ApiOperation("根据日历获取AQI数据列表")
+    @GetMapping(value = "/calendaraqi")
+    public List<Integer> getCalendarAQIl() {
+        return airQualityService.getCalendarAQIl();
     }
 }

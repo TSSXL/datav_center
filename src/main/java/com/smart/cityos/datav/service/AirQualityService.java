@@ -77,7 +77,7 @@ public class AirQualityService {
      *
      * @return 降雨量数据列表
      */
-    public List<Integer> getRainfall() {
+    public List<Integer> getCalendarAQIl() {
         List<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
