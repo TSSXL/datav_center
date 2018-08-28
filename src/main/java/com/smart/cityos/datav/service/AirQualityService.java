@@ -21,7 +21,7 @@ public class AirQualityService {
      *
      * @return 12小时AQI趋势模型集合
      */
-    public List<AQITrend> get12HourAQITrend() {
+    public List<AQITrend> get12HourAQITrend(String id) {
 
         List<AQITrend> list = new ArrayList<AQITrend>();
         list.add(new AQITrend("01时", 24));
@@ -45,7 +45,7 @@ public class AirQualityService {
      *
      * @return AQI柱状图数据列表
      */
-    public List<AQI7days> get7DaysAQITrend() {
+    public List<AQI7days> get7DaysAQITrend(String id) {
         List<AQI7days> list = new ArrayList<>();
         list.add(new AQI7days("08/18", 24, "1"));
         list.add(new AQI7days("08/18", 0, "2"));
@@ -77,7 +77,7 @@ public class AirQualityService {
      *
      * @return 降雨量数据列表
      */
-    public List<Integer> getCalendarAQIl() {
+    public List<Integer> getCalendarAQl(String id, String date) {
         List<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);

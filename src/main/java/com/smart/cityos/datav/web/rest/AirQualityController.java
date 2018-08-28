@@ -1,18 +1,13 @@
 package com.smart.cityos.datav.web.rest;
 
-import com.smart.cityos.datav.domain.model.AQI7days;
-import com.smart.cityos.datav.domain.model.AQITrend;
+import com.smart.cityos.datav.domain.Result;
 import com.smart.cityos.datav.service.AirQualityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 环保空气质量接口
@@ -34,21 +29,24 @@ public class AirQualityController {
     private AirQualityService airQualityService;
 
     @ApiOperation("获取12小时AQI趋势数据列表")
-    @GetMapping(value = "/aqitrend")
-    public List<AQITrend> get12HourAQITrend() {
-        return airQualityService.get12HourAQITrend();
+    @GetMapping(value = "/aqitrend/{id}")
+    public Result get12HourAQITrend(@PathVariable String id) {
+        log.debug("根据ID获取12小时AQI趋势数据列表 : {}", id);
+        return new Result(airQualityService.get12HourAQITrend(id));
     }
 
 
     @ApiOperation("获取7天AQI柱状图数据列表")
-    @GetMapping(value = "/aqi7days")
-    public List<AQI7days> get7DaysAQITrend() {
-        return airQualityService.get7DaysAQITrend();
+    @GetMapping(value = "/aqi7days/{id}")
+    public Result get7DaysAQITrend(@PathVariable String id) {
+        log.debug("根据ID获取7天AQI柱状图数据列表 : {}", id);
+        return new Result(airQualityService.get7DaysAQITrend(id));
     }
 
     @ApiOperation("根据日历获取AQI数据列表")
-    @GetMapping(value = "/aqicalendar")
-    public List<Integer> getCalendarAQIl() {
-        return airQualityService.getCalendarAQIl();
+    @PostMapping(value = "/aqicalendar/{id}")
+    public Result getCalendarAQI(@PathVariable String id, @RequestBody String date) {
+        log.debug("根据ID获取日历AQI数据列表 : {}", id);
+        return new Result(airQualityService.getCalendarAQl(id, date));
     }
 }
