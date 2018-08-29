@@ -150,8 +150,25 @@ public class AirQualityService {
             begin = tempStart.getTime();
         }
 
+        Integer[] month7 = new Integer[]{
+                30, 40, 40, 50, 50, 50, 50, 90, 90, 10,
+                30, 100, 100, 100, 40, 40, 40, 40, 40, 40,
+                20, 20, 20, 20, 20, 20, 20, 50, 50, 0,
+                0
+        };
+        Integer[] month8 = new Integer[]{
+                30, 100, 100, 100, 40, 40, 40, 40, 40, 40,
+                20, 20, 20, 20, 20, 20, 20, 50, 50, 0,
+                30, 40, 40, 50, 50, 50, 50, 90, 90, 10,
+                0
+        };
+
         for (int i = 0; i < result.size(); i++) {
-            result.get(i)[1] = String.valueOf((i + 1) * 2);
+            if (begin.getMonth() == 8) {
+                result.get(i)[1] = String.valueOf(month8[i]);
+            } else {
+                result.get(i)[1] = String.valueOf(month7[i]);
+            }
         }
         return result;
     }
