@@ -9,30 +9,8 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ExecuteQueryParam {
     private DbInfo dbInfo;
     private String sql;
-
-    public ExecuteQueryParam(DbInfo dbInfo, String sql) {
-        this.dbInfo = dbInfo;
-        this.sql = sql;
-    }
-
-    public DbInfo getDbInfo() {
-        return dbInfo;
-    }
-
-    public void setDbInfo(DbInfo dbInfo) {
-        this.dbInfo = dbInfo;
-    }
-
-
-
-    public String getSql() {
-        return sql;
-    }
-
-    public void setSql(String sql) {
-        this.sql = sql;
-    }
 }

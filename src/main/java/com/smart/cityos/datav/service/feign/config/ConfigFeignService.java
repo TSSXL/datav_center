@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>title:配置中心</p>
  * <p>description:配置中心</p>
@@ -24,38 +27,37 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ConfigFeignService {
 
-  @Autowired
-  private  ApplicationProperties applicationProperties;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-  private FeignServer createFeignServer() {
-    return Feign.builder().encoder(new JacksonEncoder())
-        .decoder(new JacksonDecoder())
-        .target(FeignServer.class, applicationProperties.getSqlControllerUrl());
-  }
+    private FeignServer createFeignServer() {
+        return Feign.builder().encoder(new JacksonEncoder())
+                .decoder(new JacksonDecoder())
+                .target(FeignServer.class, applicationProperties.getSqlControllerUrl());
+    }
 
 
-  /**
-   * 生成配置文件
-   */
-  public Result executeQuery(ExecuteQueryParam executeQueryParam) {
-    FeignServer feignServer = createFeignServer();
-    Object obj = feignServer.executeQuery(executeQueryParam);
-    Result result=new Result(obj);
-    return result;
-  }
+    /**
+     * 生成配置文件
+     */
+    public Result executeQuery(ExecuteQueryParam executeQueryParam) {
+        FeignServer feignServer = createFeignServer();
+        List<Map> list = feignServer.executeQuery(executeQueryParam);
+        return new Result(list);
+    }
 
-  /**
-   * 下发配置
-   */
+    /**
+     * 下发配置
+     */
 //  public Result dispatch(DeployOption deployOption) {
 //    FeignServer feignServer = createFeignServer();
 //    Result result = feignServer.dispatch(deployOption);
 //    return result;
 //  }
 
-  /**
-   * 获取是否人工审批
-   */
+    /**
+     * 获取是否人工审批
+     */
 //  public boolean getReviewInfo() {
 //    boolean result;
 //    try {

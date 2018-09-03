@@ -6,6 +6,9 @@ import feign.RequestLine;
 import com.smart.cityos.datav.domain.Result;
 import com.smart.cityos.datav.domain.ExecuteQueryParam;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>title:配置中心</p>
  * <p>description:配置中心</p>
@@ -22,7 +25,7 @@ public interface FeignServer {
    */
   @RequestLine("POST /api/sql/executeQuery")
   @Headers("Content-Type: application/json")
-  Result executeQuery(ExecuteQueryParam executeQueryParam);
+  List<Map> executeQuery(ExecuteQueryParam executeQueryParam);
 
   /**
    * 通过feign远程调度部署选项到指定地址接口
