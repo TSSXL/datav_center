@@ -49,4 +49,11 @@ public class AirQualityController {
         log.debug("根据ID获取日历AQI数据列表 : {}", id);
         return new Result(airQualityService.getCalendarAQl(id, date));
     }
+
+    @ApiOperation("获取宁波天气信息")
+    @GetMapping(value = "/getWeathers")
+    public Result getWeathers() {
+        log.debug("获取宁波天气信息");
+        return new Result(airQualityService.getWeathers());
+    }
 }
