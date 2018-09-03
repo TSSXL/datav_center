@@ -1,5 +1,8 @@
 package com.smart.cityos.datav.service;
 
+import com.smart.cityos.datav.domain.DbInfo;
+import com.smart.cityos.datav.domain.ExecuteQueryParam;
+import com.smart.cityos.datav.domain.Result;
 import com.smart.cityos.datav.domain.model.AQI7days;
 import com.smart.cityos.datav.domain.model.AQITrend;
 import java.io.BufferedReader;
@@ -11,11 +14,14 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import com.smart.cityos.datav.service.feign.config.ConfigFeignService;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -34,6 +40,9 @@ import java.util.List;
 @Slf4j
 @Service
 public class AirQualityService {
+
+    @Autowired
+    private ConfigFeignService configFeignService;
 
     /**
      * 获取12小时AQI趋势数据列表
@@ -162,6 +171,18 @@ public class AirQualityService {
             tempStart.add(Calendar.DAY_OF_YEAR, 1);
             begin = tempStart.getTime();
         }
+
+        DbInfo db=new DbInfo();
+        db.setCharacterSet("UTF8");
+        db.setDbInstanceName("ldb_5ac2df0ca4600913f8beeb17");
+        db.setDbIp("192.168.10.11");
+        db.setDbPassword("cityos@2017");
+        db.setDbPort("31631");
+        db.setDbType("MYSQL");
+        db.setDbUser("cityos");
+        ExecuteQueryParam eqp=new ExecuteQueryParam(db,"select * from EC_Day_1532332075029 where stationId=0 and DATE_FORMAT(SystemDateTime,'%Y-%m-%d')>='2017-10-1'  and DATE_FORMAT(SystemDateTime,'%Y-%m-%d')<= '2017-11-29' order by systemDateTime desc");
+
+        Result re=configFeignService.executeQuery(eqp);
 
         Integer[] month7 = new Integer[]{
                 30, 40, 40, 50, 50, 50, 50, 90, 90, 10,

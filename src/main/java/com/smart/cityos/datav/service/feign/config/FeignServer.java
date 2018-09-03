@@ -1,10 +1,10 @@
 package com.smart.cityos.datav.service.feign.config;
 
-//import com.cityos.rc.domain.model.feign.config.ConfigOption;
-//import com.cityos.rc.domain.model.feign.config.DeployOption;
-//import com.cityos.rc.domain.model.feign.config.Result;
-//import feign.Headers;
-//import feign.RequestLine;
+
+import feign.Headers;
+import feign.RequestLine;
+import com.smart.cityos.datav.domain.Result;
+import com.smart.cityos.datav.domain.ExecuteQueryParam;
 
 /**
  * <p>title:配置中心</p>
@@ -16,13 +16,13 @@ package com.smart.cityos.datav.service.feign.config;
 public interface FeignServer {
 
   /**
-   * 通过feign 远程提交配置选项到指定地址接口
-   * @param configOption 配置选项
+   * 通过feign 通用sql查询mysql
+   * @param executeQueryParam 配置选项
    * @return 返回接口处理后信息
    */
-//  @RequestLine("POST /api/configs/saveconfig")
-//  @Headers("Content-Type: application/json")
-//  Result saveConfigs(ConfigOption configOption);
+  @RequestLine("POST /api/sql/executeQuery")
+  @Headers("Content-Type: application/json")
+  Result executeQuery(ExecuteQueryParam executeQueryParam);
 
   /**
    * 通过feign远程调度部署选项到指定地址接口

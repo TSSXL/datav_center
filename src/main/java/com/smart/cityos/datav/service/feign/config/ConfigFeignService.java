@@ -2,6 +2,8 @@ package com.smart.cityos.datav.service.feign.config;
 
 
 import com.smart.cityos.datav.config.ApplicationProperties;
+import com.smart.cityos.datav.domain.ExecuteQueryParam;
+import com.smart.cityos.datav.domain.Result;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
@@ -35,11 +37,12 @@ public class ConfigFeignService {
   /**
    * 生成配置文件
    */
-//  public Result saveConfigs(ConfigOption configOption) {
-//    FeignServer feignServer = createFeignServer();
-//    Result result = feignServer.saveConfigs(configOption);
-//    return result;
-//  }
+  public Result executeQuery(ExecuteQueryParam executeQueryParam) {
+    FeignServer feignServer = createFeignServer();
+    Object obj = feignServer.executeQuery(executeQueryParam);
+    Result result=new Result(obj);
+    return result;
+  }
 
   /**
    * 下发配置
