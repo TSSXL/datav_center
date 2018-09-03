@@ -25,3 +25,4 @@ application:
     corePoolSize: 2
     maxPoolSize: 50
     queueCapacity: 1000
+  sql-controller-url : "http://192.168.10.11:31256/"

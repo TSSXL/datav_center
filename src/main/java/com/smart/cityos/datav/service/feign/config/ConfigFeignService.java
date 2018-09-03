@@ -1,12 +1,10 @@
 package com.smart.cityos.datav.service.feign.config;
 
-//import com.cityos.rc.config.ApplicationProperties;
-//import com.cityos.rc.domain.model.feign.config.ConfigOption;
-//import com.cityos.rc.domain.model.feign.config.DeployOption;
-//import com.cityos.rc.domain.model.feign.config.Result;
-//import feign.Feign;
-//import feign.jackson.JacksonDecoder;
-//import feign.jackson.JacksonEncoder;
+
+import com.smart.cityos.datav.config.ApplicationProperties;
+import feign.Feign;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,13 +21,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ConfigFeignService {
 
-//  private final ApplicationProperties applicationProperties;
+  private final ApplicationProperties applicationProperties;
 
-//  private FeignServer createFeignServer() {
-//    return Feign.builder().encoder(new JacksonEncoder())
-//        .decoder(new JacksonDecoder())
-//        .target(FeignServer.class, applicationProperties.getConfigUrl());
-//  }
+  private FeignServer createFeignServer() {
+    return Feign.builder().encoder(new JacksonEncoder())
+        .decoder(new JacksonDecoder())
+        .target(FeignServer.class, applicationProperties.getSqlControllerUrl());
+  }
 
   /**
    * 生成配置文件
