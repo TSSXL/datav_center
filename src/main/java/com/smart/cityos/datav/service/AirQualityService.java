@@ -2,7 +2,20 @@ package com.smart.cityos.datav.service;
 
 import com.smart.cityos.datav.domain.model.AQI7days;
 import com.smart.cityos.datav.domain.model.AQITrend;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -172,5 +185,103 @@ public class AirQualityService {
         }
         return result;
     }
+
+    /**
+     *获取天气信息
+     *
+     * @author shenhj
+     * @date 2018/9/3 11:08
+     */
+    public List<String> getWeathers(){
+        Document doc = null;
+        HttpURLConnection uConnection = null;
+        List<String> result = new ArrayList<>();
+        try {
+            //创建url链接
+            uConnection = createConnection("http://www.webxml.com.cn/WebServices/WeatherWebService.asmx/getWeatherbyCityName?theCityName=宁波");
+            //获取接口输出内容
+            String xml = getResponseResult(uConnection);
+            result = readStringXmlOut(xml);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }finally {
+            uConnection.disconnect();
+        }
+
+        return result;
+    }
+
+    public String getResponseResult(HttpURLConnection httpConnection)
+        throws IOException {
+        String result = "";
+        try {
+            int responseCode = httpConnection.getResponseCode();
+            switch (responseCode) {
+                // 状态码200标识执行正常，状态码201表示，该内容已经被创见
+                case 200:
+                case 201:
+                    BufferedReader responseBuffer1 = new BufferedReader(
+                        new InputStreamReader(httpConnection.getInputStream(),
+                            "UTF-8"));
+                    String line = "";
+                    while((line = responseBuffer1.readLine()) != null) {
+                        result += line;
+                    }
+                    break;
+                default: {
+                    BufferedReader responseBuffer2 = new BufferedReader(
+                        new InputStreamReader(httpConnection.getErrorStream(),
+                            "UTF-8"));
+                    result = responseBuffer2.readLine();
+                    throw new RuntimeException("Failed : HTTP error code : "
+                        + httpConnection.getResponseCode() + "; message : "
+                        + result);
+                }
+            }
+        } catch (Exception ex) {
+            throw ex;
+        }
+        return result;
+    }
+
+    public HttpURLConnection createConnection(String url)
+        throws IOException {
+        URL targetUrl = new URL(url);
+        HttpURLConnection httpConnection = (HttpURLConnection) targetUrl.openConnection();
+        httpConnection.setDoOutput(true);
+        httpConnection.setDoInput(true);
+        // 连接超时 单位毫秒
+        httpConnection.setConnectTimeout(30000);
+        // 读取超时
+        httpConnection.setReadTimeout(30000);
+        httpConnection.setRequestMethod("GET");
+        httpConnection.setRequestProperty("Accept", "*/*");
+        return httpConnection;
+    }
+
+  public static List<String> readStringXmlOut(String xml) {
+    List<String> list = new ArrayList();
+    Document doc = null;
+    try {
+      // 将字符串转为XML
+      doc = DocumentHelper.parseText(xml);
+      // 获取根节点
+      Element rootElt = doc.getRootElement();
+      // 拿到根节点的名称
+      System.out.println("根节点：" + rootElt.getName());
+
+      Iterator<Element> iter = rootElt.elementIterator();
+      // 遍历节点
+      while (iter.hasNext()) {
+        Element recordEle = (Element) iter.next();
+        list.add(recordEle.getText());
+      }
+    } catch (DocumentException e) {
+      e.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return list;
+  }
 
 }
