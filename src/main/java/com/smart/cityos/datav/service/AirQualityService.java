@@ -8,8 +8,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -28,8 +34,6 @@ import java.util.List;
 @Slf4j
 @Service
 public class AirQualityService {
-
-    private final String API_CONNENT_ERROR = "api连接异常";
 
     /**
      * 获取12小时AQI趋势数据列表
@@ -188,21 +192,23 @@ public class AirQualityService {
      * @author shenhj
      * @date 2018/9/3 11:08
      */
-    public String getWeathers(){
+    public List<String> getWeathers(){
+        Document doc = null;
         HttpURLConnection uConnection = null;
-        String o = "";
+        List<String> result = new ArrayList<>();
         try {
             //创建url链接
             uConnection = createConnection("http://www.webxml.com.cn/WebServices/WeatherWebService.asmx/getWeatherbyCityName?theCityName=宁波");
             //获取接口输出内容
-            o = getResponseResult(uConnection);
+            String xml = getResponseResult(uConnection);
+            result = readStringXmlOut(xml);
         } catch (Exception ex) {
-            o = API_CONNENT_ERROR;
+            ex.printStackTrace();
         }finally {
             uConnection.disconnect();
         }
 
-        return o;
+        return result;
     }
 
     public String getResponseResult(HttpURLConnection httpConnection)
@@ -252,5 +258,30 @@ public class AirQualityService {
         httpConnection.setRequestProperty("Accept", "*/*");
         return httpConnection;
     }
+
+  public static List<String> readStringXmlOut(String xml) {
+    List<String> list = new ArrayList();
+    Document doc = null;
+    try {
+      // 将字符串转为XML
+      doc = DocumentHelper.parseText(xml);
+      // 获取根节点
+      Element rootElt = doc.getRootElement();
+      // 拿到根节点的名称
+      System.out.println("根节点：" + rootElt.getName());
+
+      Iterator<Element> iter = rootElt.elementIterator();
+      // 遍历节点
+      while (iter.hasNext()) {
+        Element recordEle = (Element) iter.next();
+        list.add(recordEle.getText());
+      }
+    } catch (DocumentException e) {
+      e.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return list;
+  }
 
 }
