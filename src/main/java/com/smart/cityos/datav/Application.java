@@ -1,8 +1,10 @@
 package com.smart.cityos.datav;
 
+import com.smart.cityos.datav.config.ApplicationProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
@@ -13,6 +15,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * @date Created in 2018-06-06
  */
 @EnableAutoConfiguration
+@EnableConfigurationProperties({ApplicationProperties.class})
 @ComponentScan({"com.smart.cityos.datav"})
 @EnableMongoRepositories(basePackages = {"com.smart.cityos.datav"})
 @SpringBootApplication

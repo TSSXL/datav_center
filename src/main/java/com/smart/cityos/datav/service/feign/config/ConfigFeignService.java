@@ -7,6 +7,7 @@ import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,18 +17,20 @@ import org.springframework.stereotype.Service;
  * @author:
  * @date Created in 2017-4-5
  */
-@Service(value = "configFeignService")
+@Service
 @AllArgsConstructor
 @Slf4j
 public class ConfigFeignService {
 
-  private final ApplicationProperties applicationProperties;
+  @Autowired
+  private  ApplicationProperties applicationProperties;
 
   private FeignServer createFeignServer() {
     return Feign.builder().encoder(new JacksonEncoder())
         .decoder(new JacksonDecoder())
         .target(FeignServer.class, applicationProperties.getSqlControllerUrl());
   }
+
 
   /**
    * 生成配置文件
