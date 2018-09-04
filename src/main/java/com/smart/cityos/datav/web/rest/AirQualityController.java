@@ -39,7 +39,7 @@ public class AirQualityController {
 
 
     @ApiOperation("获取7天AQI柱状图数据列表")
-    @GetMapping(value = "/aqi7days")
+    @PostMapping(value = "/aqi7days")
     public Result get7DaysAQITrend(@RequestBody Map data) {
         log.debug("根据ID获取7天AQI柱状图数据列表 : {}");
         return new Result(airQualityService.get7DaysAQITrend(data));

@@ -13,17 +13,23 @@ import java.util.Date;
  */
 public class DateTimeUtils {
 
-  public static Date toDate(String date) throws ParseException {
+    public static Date toDate(String date) throws ParseException {
 
-    SimpleDateFormat simpleDateFormat =
-        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    return simpleDateFormat.parse(date);
-  }
+        SimpleDateFormat simpleDateFormat =
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return simpleDateFormat.parse(date);
+    }
 
-  public static String toString(Date date) {
-    SimpleDateFormat simpleDateFormat =
-        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    return simpleDateFormat.format(date);
-  }
+    public static String toString(Date date) {
+        SimpleDateFormat simpleDateFormat =
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return simpleDateFormat.format(date);
+    }
+
+    public static String toString(Date date, String pattern) {
+        SimpleDateFormat simpleDateFormat =
+                new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(date);
+    }
 
 }
