@@ -39,10 +39,10 @@ public class AirQualityController {
 
 
     @ApiOperation("获取7天AQI柱状图数据列表")
-    @GetMapping(value = "/aqi7days/{id}")
-    public Result get7DaysAQITrend(@PathVariable String id) {
-        log.debug("根据ID获取7天AQI柱状图数据列表 : {}", id);
-        return new Result(airQualityService.get7DaysAQITrend(id));
+    @GetMapping(value = "/aqi7days")
+    public Result get7DaysAQITrend(@RequestBody Map data) {
+        log.debug("根据ID获取7天AQI柱状图数据列表 : {}");
+        return new Result(airQualityService.get7DaysAQITrend(data));
     }
 
     @ApiOperation("根据日历获取AQI数据列表")

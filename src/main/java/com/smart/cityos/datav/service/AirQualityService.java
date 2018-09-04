@@ -5,6 +5,7 @@ import com.smart.cityos.datav.domain.ExecuteQueryParam;
 import com.smart.cityos.datav.domain.Result;
 import com.smart.cityos.datav.domain.model.AQI7days;
 import com.smart.cityos.datav.domain.model.AQITrend;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -59,17 +60,17 @@ public class AirQualityService {
         List<AQITrend> list = new ArrayList<AQITrend>();
 
 
-        String sql="select * from "+data.get("tableName")
-                +" where stationId="+data.get("id")+" order by TimePoint desc limit 0,12";
-        Map query=new HashMap();
-        query.put("dbInfo",data.get("dbInfo"));
-        query.put("sql",sql);
+        String sql = "select * from " + data.get("tableName")
+                + " where stationId=" + data.get("id") + " order by TimePoint desc limit 0,12";
+        Map query = new HashMap();
+        query.put("dbInfo", data.get("dbInfo"));
+        query.put("sql", sql);
 
-        List<Map> re=configFeignService.executeQuery(query);
+        List<Map> re = configFeignService.executeQuery(query);
 
 
-        for(int i=0;i<re.size();i++){
-            Date d=null;
+        for (int i = 0; i < re.size(); i++) {
+            Date d = null;
             try {
                 d = dFormat.parse(String.valueOf(re.get(i).get("TimePoint")));
                 //log.debug("执行日期格式化 : {}", re.get(i).get("TimePoint"));
@@ -77,7 +78,7 @@ public class AirQualityService {
                 d = new Date();
                 log.error("日期格式错误", px);
             }
-            list.add(0,new AQITrend(sDateFormat.format(d)+"时", Integer.parseInt(String.valueOf(re.get(i).get("AQI")))));
+            list.add(0, new AQITrend(sDateFormat.format(d) + "时", Integer.parseInt(String.valueOf(re.get(i).get("AQI")))));
         }
 
         return list;
@@ -89,8 +90,9 @@ public class AirQualityService {
      *
      * @return AQI柱状图数据列表
      */
-    public List<AQI7days> get7DaysAQITrend(String id) {
+    public List<AQI7days> get7DaysAQITrend(Map data) {
         List<AQI7days> list = new ArrayList<>();
+        String id = "0";
         if (id.equals("0")) {
             list.add(new AQI7days("08/18", 2, "1"));
             list.add(new AQI7days("08/18", 20, "2"));
@@ -136,6 +138,12 @@ public class AirQualityService {
             list.add(new AQI7days("08/24", 0, "2"));
             list.add(new AQI7days("08/24", 101, "3"));
         }
+
+        String sql = String.format("select  * from %s where  stationId=%s  and date_sub(curdate(), INTERVAL 7 DAY) <= date(`TimePoint`)", data.get("tableName"), data.get("stationId"));
+        Map<String, Object> query = new HashMap<>();
+        query.put("dbInfo", data.get("dbInfo"));
+        query.put("sql", sql);
+        List<Map> result = configFeignService.executeQuery(query);
         return list;
     }
 
@@ -150,7 +158,7 @@ public class AirQualityService {
         SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date d = null;
         List<String[]> result = new ArrayList<>();
-        String range=(String)data.get("range");
+        String range = (String) data.get("range");
         try {
             d = sDateFormat.parse(range);
             log.debug("执行日期格式化 : {}", range);
@@ -175,19 +183,19 @@ public class AirQualityService {
             begin = tempStart.getTime();
         }
 
-        String sql="select DATE_FORMAT(TimePoint ,'%Y-%m-%d') date,AQI from "+data.get("tableName")+" where stationId="+data.get("stationId")+" and "+
-                    "DATE_FORMAT(TimePoint ,'%Y-%m-%d')>='"+result.get(0)[0].toString()+"'  "+
-                    "and DATE_FORMAT(TimePoint ,'%Y-%m-%d')<= '"+result.get(result.size()-1)[0].toString()+"' order by TimePoint  desc";
+        String sql = "select DATE_FORMAT(TimePoint ,'%Y-%m-%d') date,AQI from " + data.get("tableName") + " where stationId=" + data.get("stationId") + " and " +
+                "DATE_FORMAT(TimePoint ,'%Y-%m-%d')>='" + result.get(0)[0].toString() + "'  " +
+                "and DATE_FORMAT(TimePoint ,'%Y-%m-%d')<= '" + result.get(result.size() - 1)[0].toString() + "' order by TimePoint  desc";
 
 
-        Map query=new HashMap();
-        query.put("dbInfo",data.get("dbInfo"));
-        query.put("sql",sql);
+        Map query = new HashMap();
+        query.put("dbInfo", data.get("dbInfo"));
+        query.put("sql", sql);
 
-        List<Map> re=configFeignService.executeQuery(query);
+        List<Map> re = configFeignService.executeQuery(query);
 
         for (int i = 0; i < result.size(); i++) {
-            for(int k=0;k<re.size();k++){
+            for (int k = 0; k < re.size(); k++) {
                 if (result.get(i)[0].equals(re.get(k).get("date"))) {
                     result.get(i)[1] = String.valueOf(re.get(k).get("AQI"));
                 }
@@ -200,6 +208,7 @@ public class AirQualityService {
 
     /**
      * 获取空气质量站点详情信息
+     *
      * @param data
      * @return
      */
@@ -264,12 +273,12 @@ public class AirQualityService {
     }
 
     /**
-     *获取天气信息
+     * 获取天气信息
      *
      * @author shenhj
      * @date 2018/9/3 11:08
      */
-    public List<String> getWeathers(){
+    public List<String> getWeathers() {
         Document doc = null;
         HttpURLConnection uConnection = null;
         List<String> result = new ArrayList<>();
@@ -281,7 +290,7 @@ public class AirQualityService {
             result = readStringXmlOut(xml);
         } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             uConnection.disconnect();
         }
 
@@ -289,7 +298,7 @@ public class AirQualityService {
     }
 
     public String getResponseResult(HttpURLConnection httpConnection)
-        throws IOException {
+            throws IOException {
         String result = "";
         try {
             int responseCode = httpConnection.getResponseCode();
@@ -298,21 +307,21 @@ public class AirQualityService {
                 case 200:
                 case 201:
                     BufferedReader responseBuffer1 = new BufferedReader(
-                        new InputStreamReader(httpConnection.getInputStream(),
-                            "UTF-8"));
+                            new InputStreamReader(httpConnection.getInputStream(),
+                                    "UTF-8"));
                     String line = "";
-                    while((line = responseBuffer1.readLine()) != null) {
+                    while ((line = responseBuffer1.readLine()) != null) {
                         result += line;
                     }
                     break;
                 default: {
                     BufferedReader responseBuffer2 = new BufferedReader(
-                        new InputStreamReader(httpConnection.getErrorStream(),
-                            "UTF-8"));
+                            new InputStreamReader(httpConnection.getErrorStream(),
+                                    "UTF-8"));
                     result = responseBuffer2.readLine();
                     throw new RuntimeException("Failed : HTTP error code : "
-                        + httpConnection.getResponseCode() + "; message : "
-                        + result);
+                            + httpConnection.getResponseCode() + "; message : "
+                            + result);
                 }
             }
         } catch (Exception ex) {
@@ -322,7 +331,7 @@ public class AirQualityService {
     }
 
     public HttpURLConnection createConnection(String url)
-        throws IOException {
+            throws IOException {
         URL targetUrl = new URL(url);
         HttpURLConnection httpConnection = (HttpURLConnection) targetUrl.openConnection();
         httpConnection.setDoOutput(true);
@@ -336,29 +345,29 @@ public class AirQualityService {
         return httpConnection;
     }
 
-  public static List<String> readStringXmlOut(String xml) {
-    List<String> list = new ArrayList();
-    Document doc = null;
-    try {
-      // 将字符串转为XML
-      doc = DocumentHelper.parseText(xml);
-      // 获取根节点
-      Element rootElt = doc.getRootElement();
-      // 拿到根节点的名称
-      System.out.println("根节点：" + rootElt.getName());
+    public static List<String> readStringXmlOut(String xml) {
+        List<String> list = new ArrayList();
+        Document doc = null;
+        try {
+            // 将字符串转为XML
+            doc = DocumentHelper.parseText(xml);
+            // 获取根节点
+            Element rootElt = doc.getRootElement();
+            // 拿到根节点的名称
+            System.out.println("根节点：" + rootElt.getName());
 
-      Iterator<Element> iter = rootElt.elementIterator();
-      // 遍历节点
-      while (iter.hasNext()) {
-        Element recordEle = (Element) iter.next();
-        list.add(recordEle.getText());
-      }
-    } catch (DocumentException e) {
-      e.printStackTrace();
-    } catch (Exception e) {
-      e.printStackTrace();
+            Iterator<Element> iter = rootElt.elementIterator();
+            // 遍历节点
+            while (iter.hasNext()) {
+                Element recordEle = (Element) iter.next();
+                list.add(recordEle.getText());
+            }
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
-    return list;
-  }
 
 }
