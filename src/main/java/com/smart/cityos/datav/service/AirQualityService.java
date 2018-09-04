@@ -204,7 +204,63 @@ public class AirQualityService {
      * @return
      */
     public List<Map> getStationInfoList(Map data){
-        return null;
+
+        //查询所有站点信息
+        String stationSql="select * from "+data.get("tableName")+" "+data.get("where");
+
+        Map stationQuery=new HashMap();
+        stationQuery.put("dbInfo",data.get("dbInfo"));
+        stationQuery.put("sql",stationSql);
+
+        List<Map> stations=configFeignService.executeQuery(stationQuery);
+
+        //根据站点条数获取最新的实时信息
+        String statusSql="select h.*,DATE_FORMAT(h.TimePoint ,'%Y-%m-%d %H:%i:%s') formatTime from "
+                +data.get("hourTableName")+" h "+data.get("where")+" order by TimePoint desc limit 0,"+stations.size();
+
+        Map statusQuery=new HashMap();
+        statusQuery.put("dbInfo",data.get("dbInfo"));
+        statusQuery.put("sql",statusSql);
+
+        List<Map> status=configFeignService.executeQuery(statusQuery);
+
+        //将站点信息和实时信息合并
+        List<Map> result=returnStationStatusList(stations,status);
+
+
+        return result;
+    }
+
+    public List<Map> returnStationStatusList(List<Map> stations,List<Map> status){
+        List<Map> result=new ArrayList<Map>();
+        for(int i=0;i<stations.size();i++){
+            Map station=stations.get(i);
+            for(int k=0;k<status.size();k++){
+                Map ss=status.get(k);
+                //当站点ID相同时保存
+                if(station.get("StationID").equals(ss.get("StationID"))){
+                    station.put("AQI",ss.get("AQI"));
+                    station.put("formatTime",ss.get("formatTime"));
+                    station.put("PrimaryPollutant",ss.get("PrimaryPollutant"));
+                    int aqi=Integer.parseInt(String.valueOf(ss.get("AQI")));
+                    if(aqi<50){
+                        station.put("color","#6cd888");
+                        station.put("status","优");
+                    }else if(aqi>=50 && aqi<100){
+                        station.put("color","#fff280");
+                        station.put("status","良");
+                    }else if(aqi>=100){
+                        station.put("color","#ff688f");
+                        station.put("status","轻度污染");
+                    }
+                    result.add(station);
+
+                }
+            }
+
+        }
+
+        return result;
     }
 
     /**
