@@ -25,7 +25,16 @@ public interface FeignServer {
    */
   @RequestLine("POST /api/sql/executeQuery")
   @Headers("Content-Type: application/json")
-  List<Map> executeQuery(ExecuteQueryParam executeQueryParam);
+  List<Map> executeQuery(Map executeQueryParam);
+
+  /**
+   * 通过feign 通用table查询mysql
+   * @param executeQueryParam 配置选项
+   * @return 返回接口处理后信息
+   */
+  @RequestLine("POST /api/sql/tableQuery")
+  @Headers("Content-Type: application/json")
+  List<Map> tableQuery(Map executeQueryParam);
 
   /**
    * 通过feign远程调度部署选项到指定地址接口

@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -49,36 +50,36 @@ public class AirQualityService {
      *
      * @return 12小时AQI趋势模型集合
      */
-    public List<AQITrend> get12HourAQITrend(String id) {
+    public List<AQITrend> get12HourAQITrend(Map data) {
+
+
+        SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("HH");
 
         List<AQITrend> list = new ArrayList<AQITrend>();
-        if (id.equals("0")) {
-            list.add(new AQITrend("01时", 45));
-            list.add(new AQITrend("02时", 55));
-            list.add(new AQITrend("03时", 66));
-            list.add(new AQITrend("04时", 77));
-            list.add(new AQITrend("05时", 88));
-            list.add(new AQITrend("06时", 33));
-            list.add(new AQITrend("07时", 44));
-            list.add(new AQITrend("08时", 66));
-            list.add(new AQITrend("09时", 88));
-            list.add(new AQITrend("10时", 11));
-            list.add(new AQITrend("11时", 98));
-            list.add(new AQITrend("12时", 110));
-        } else {
-            list.add(new AQITrend("01时", 24));
-            list.add(new AQITrend("02时", 45));
-            list.add(new AQITrend("03时", 67));
-            list.add(new AQITrend("04时", 23));
-            list.add(new AQITrend("05时", 45));
-            list.add(new AQITrend("06时", 102));
-            list.add(new AQITrend("07时", 34));
-            list.add(new AQITrend("08时", 54));
-            list.add(new AQITrend("09时", 56));
-            list.add(new AQITrend("10时", 15));
-            list.add(new AQITrend("11时", 73));
-            list.add(new AQITrend("12时", 74));
+
+
+        String sql="select * from "+data.get("tableName")
+                +" where stationId="+data.get("id")+" order by TimePoint desc limit 0,12";
+        Map query=new HashMap();
+        query.put("dbInfo",data.get("dbInfo"));
+        query.put("sql",sql);
+
+        List<Map> re=configFeignService.executeQuery(query);
+
+
+        for(int i=0;i<re.size();i++){
+            Date d=null;
+            try {
+                d = dFormat.parse(String.valueOf(re.get(i).get("TimePoint")));
+                //log.debug("执行日期格式化 : {}", re.get(i).get("TimePoint"));
+            } catch (ParseException px) {
+                d = new Date();
+                log.error("日期格式错误", px);
+            }
+            list.add(0,new AQITrend(sDateFormat.format(d)+"时", Integer.parseInt(String.valueOf(re.get(i).get("AQI")))));
         }
+
         return list;
     }
 
@@ -144,13 +145,15 @@ public class AirQualityService {
      *
      * @return 降雨量数据列表
      */
-    public List<String[]> getCalendarAQl(String id, String date) {
+    public List<String[]> getCalendarAQl(Map data) {
         SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM");
         SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date d = null;
+        List<String[]> result = new ArrayList<>();
+        String range=(String)data.get("range");
         try {
-            d = sDateFormat.parse(date);
-            log.debug("执行日期格式化 : {}", date);
+            d = sDateFormat.parse(range);
+            log.debug("执行日期格式化 : {}", range);
         } catch (ParseException px) {
             d = new Date();
             log.error("日期格式错误", px);
@@ -163,7 +166,7 @@ public class AirQualityService {
         cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date end = cal.getTime();
 
-        List<String[]> result = new ArrayList<>();
+
         Calendar tempStart = Calendar.getInstance();
         tempStart.setTime(begin);
         while (begin.getTime() <= end.getTime()) {
@@ -172,39 +175,36 @@ public class AirQualityService {
             begin = tempStart.getTime();
         }
 
-        DbInfo db=new DbInfo();
-        db.setCharacterSet("UTF8");
-        db.setDbInstanceName("ldb_5ac2df0ca4600913f8beeb17");
-        db.setDbIp("192.168.10.11");
-        db.setDbPassword("cityos@2017");
-        db.setDbPort("31631");
-        db.setDbType("MYSQL");
-        db.setDbUser("cityos");
-        ExecuteQueryParam eqp=new ExecuteQueryParam(db,"select * from EC_Day_1532332075029 where stationId=0 and DATE_FORMAT(SystemDateTime,'%Y-%m-%d')>='2017-10-1'  and DATE_FORMAT(SystemDateTime,'%Y-%m-%d')<= '2017-11-29' order by systemDateTime desc");
+        String sql="select DATE_FORMAT(TimePoint ,'%Y-%m-%d') date,AQI from "+data.get("tableName")+" where stationId="+data.get("stationId")+" and "+
+                    "DATE_FORMAT(TimePoint ,'%Y-%m-%d')>='"+result.get(0)[0].toString()+"'  "+
+                    "and DATE_FORMAT(TimePoint ,'%Y-%m-%d')<= '"+result.get(result.size()-1)[0].toString()+"' order by TimePoint  desc";
 
-        Result re=configFeignService.executeQuery(eqp);
 
-        Integer[] month7 = new Integer[]{
-                30, 40, 40, 50, 50, 50, 50, 90, 90, 10,
-                30, 100, 100, 100, 40, 40, 40, 40, 40, 40,
-                20, 20, 20, 20, 20, 20, 20, 50, 50, 20,
-                50
-        };
-        Integer[] month8 = new Integer[]{
-                30, 100, 100, 100, 40, 40, 40, 40, 40, 40,
-                20, 20, 20, 20, 20, 20, 20, 50, 50, 51,
-                30, 40, 40, 50, 50, 50, 50, 90, 90, 0,
-                0
-        };
+        Map query=new HashMap();
+        query.put("dbInfo",data.get("dbInfo"));
+        query.put("sql",sql);
+
+        List<Map> re=configFeignService.executeQuery(query);
 
         for (int i = 0; i < result.size(); i++) {
-            if (begin.getMonth() == 8) {
-                result.get(i)[1] = String.valueOf(month8[i]);
-            } else {
-                result.get(i)[1] = String.valueOf(month7[i]);
+            for(int k=0;k<re.size();k++){
+                if (result.get(i)[0].equals(re.get(k).get("date"))) {
+                    result.get(i)[1] = String.valueOf(re.get(k).get("AQI"));
+                }
             }
+
         }
         return result;
+    }
+
+
+    /**
+     * 获取空气质量站点详情信息
+     * @param data
+     * @return
+     */
+    public List<Map> getStationInfoList(Map data){
+        return null;
     }
 
     /**

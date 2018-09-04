@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * 环保空气质量接口
  *
@@ -29,10 +31,10 @@ public class AirQualityController {
     private AirQualityService airQualityService;
 
     @ApiOperation("获取12小时AQI趋势数据列表")
-    @GetMapping(value = "/aqitrend/{id}")
-    public Result get12HourAQITrend(@PathVariable String id) {
-        log.debug("根据ID获取12小时AQI趋势数据列表 : {}", id);
-        return new Result(airQualityService.get12HourAQITrend(id));
+    @PostMapping(value = "/aqitrend")
+    public Result get12HourAQITrend(@RequestBody Map data) {
+        log.debug("根据ID获取12小时AQI趋势数据列表 : {}");
+        return new Result(airQualityService.get12HourAQITrend(data));
     }
 
 
@@ -44,10 +46,9 @@ public class AirQualityController {
     }
 
     @ApiOperation("根据日历获取AQI数据列表")
-    @PostMapping(value = "/aqicalendar/{id}")
-    public Result getCalendarAQI(@PathVariable String id, @RequestBody String date) {
-        log.debug("根据ID获取日历AQI数据列表 : {}", id);
-        return new Result(airQualityService.getCalendarAQl(id, date));
+    @PostMapping(value = "/aqicalendar")
+    public Result getCalendarAQI(@RequestBody Map data) {
+        return new Result(airQualityService.getCalendarAQl(data));
     }
 
     @ApiOperation("获取宁波天气信息")
@@ -55,5 +56,12 @@ public class AirQualityController {
     public Result getWeathers() {
         log.debug("获取宁波天气信息");
         return new Result(airQualityService.getWeathers());
+    }
+
+    @ApiOperation("获取站点状态列表")
+    @PostMapping(value = "/getStationInfoList")
+    public Result getStationInfoList(@RequestBody Map data) {
+        log.debug("根据ID获取12小时AQI趋势数据列表 : {}");
+        return new Result(airQualityService.getStationInfoList(data));
     }
 }

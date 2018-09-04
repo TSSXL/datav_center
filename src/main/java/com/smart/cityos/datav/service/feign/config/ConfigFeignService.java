@@ -38,12 +38,21 @@ public class ConfigFeignService {
 
 
     /**
-     * 生成配置文件
+     * 通过feign 通用sql查询mysql
      */
-    public Result executeQuery(ExecuteQueryParam executeQueryParam) {
+    public List<Map> executeQuery(Map executeQueryParam) {
         FeignServer feignServer = createFeignServer();
         List<Map> list = feignServer.executeQuery(executeQueryParam);
-        return new Result(list);
+        return list;
+    }
+
+    /**
+     * 通过feign 通用sql查询mysql
+     */
+    public List<Map> tableQuery(Map executeQueryParam) {
+        FeignServer feignServer = createFeignServer();
+        List<Map> list = feignServer.tableQuery(executeQueryParam);
+        return list;
     }
 
     /**
