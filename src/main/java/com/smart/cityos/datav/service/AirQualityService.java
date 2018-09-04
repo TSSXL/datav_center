@@ -1,16 +1,11 @@
 package com.smart.cityos.datav.service;
 
-import com.smart.cityos.datav.domain.DbInfo;
-import com.smart.cityos.datav.domain.ExecuteQueryParam;
-import com.smart.cityos.datav.domain.Result;
 import com.smart.cityos.datav.domain.model.AQI7days;
 import com.smart.cityos.datav.domain.model.AQITrend;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -18,6 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.smart.cityos.datav.service.feign.config.ConfigFeignService;
+import com.smart.cityos.datav.utils.DateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -92,58 +88,33 @@ public class AirQualityService {
      */
     public List<AQI7days> get7DaysAQITrend(Map data) {
         List<AQI7days> list = new ArrayList<>();
-        String id = "0";
-        if (id.equals("0")) {
-            list.add(new AQI7days("08/18", 2, "1"));
-            list.add(new AQI7days("08/18", 20, "2"));
-            list.add(new AQI7days("08/18", 30, "3"));
-            list.add(new AQI7days("08/19", 90, "1"));
-            list.add(new AQI7days("08/19", 1, "2"));
-            list.add(new AQI7days("08/19", 20, "3"));
-            list.add(new AQI7days("08/20", 22, "1"));
-            list.add(new AQI7days("08/20", 10, "2"));
-            list.add(new AQI7days("08/20", 30, "3"));
-            list.add(new AQI7days("08/21", 20, "1"));
-            list.add(new AQI7days("08/21", 20, "2"));
-            list.add(new AQI7days("08/21", 0, "3"));
-            list.add(new AQI7days("08/22", 60, "1"));
-            list.add(new AQI7days("08/22", 20, "2"));
-            list.add(new AQI7days("08/22", 10, "3"));
-            list.add(new AQI7days("08/23", 0, "1"));
-            list.add(new AQI7days("08/23", 29, "2"));
-            list.add(new AQI7days("08/23", 32, "3"));
-            list.add(new AQI7days("08/24", 22, "1"));
-            list.add(new AQI7days("08/24", 65, "2"));
-            list.add(new AQI7days("08/24", 10, "3"));
-        } else {
-            list.add(new AQI7days("08/18", 24, "1"));
-            list.add(new AQI7days("08/18", 0, "2"));
-            list.add(new AQI7days("08/18", 0, "3"));
-            list.add(new AQI7days("08/19", 40, "1"));
-            list.add(new AQI7days("08/19", 0, "2"));
-            list.add(new AQI7days("08/19", 0, "3"));
-            list.add(new AQI7days("08/20", 36, "1"));
-            list.add(new AQI7days("08/20", 0, "2"));
-            list.add(new AQI7days("08/20", 0, "3"));
-            list.add(new AQI7days("08/21", 0, "1"));
-            list.add(new AQI7days("08/21", 70, "2"));
-            list.add(new AQI7days("08/21", 0, "3"));
-            list.add(new AQI7days("08/22", 90, "1"));
-            list.add(new AQI7days("08/22", 0, "2"));
-            list.add(new AQI7days("08/22", 0, "3"));
-            list.add(new AQI7days("08/23", 49, "1"));
-            list.add(new AQI7days("08/23", 0, "2"));
-            list.add(new AQI7days("08/23", 0, "3"));
-            list.add(new AQI7days("08/24", 0, "1"));
-            list.add(new AQI7days("08/24", 0, "2"));
-            list.add(new AQI7days("08/24", 101, "3"));
-        }
-
-        String sql = String.format("select  * from %s where  stationId=%s  and date_sub(curdate(), INTERVAL 7 DAY) <= date(`TimePoint`)", data.get("tableName"), data.get("stationId"));
+        String sql = String.format("select  * from %s where  stationId=%s order by TimePoint  desc limit 7", data.get("tableName"), data.get("stationId"));
         Map<String, Object> query = new HashMap<>();
         query.put("dbInfo", data.get("dbInfo"));
         query.put("sql", sql);
         List<Map> result = configFeignService.executeQuery(query);
+        result.forEach(v -> {
+            int aqi = Integer.parseInt(v.get("AQI").toString());
+            String dateStr = null;
+            try {
+                dateStr = DateTimeUtils.toString(DateTimeUtils.toDate(v.get("TimePoint").toString()), "MM/dd");
+            } catch (ParseException e) {
+                log.error("日期格式转换错误", e);
+            }
+            if (aqi < 50) {
+                list.add(new AQI7days(dateStr, aqi, "1"));
+                list.add(new AQI7days(dateStr, 0, "2"));
+                list.add(new AQI7days(dateStr, 0, "3"));
+            } else if (aqi > 50) {
+                list.add(new AQI7days(dateStr, 0, "1"));
+                list.add(new AQI7days(dateStr, aqi, "2"));
+                list.add(new AQI7days(dateStr, 0, "3"));
+            } else if (aqi > 100) {
+                list.add(new AQI7days(dateStr, 0, "1"));
+                list.add(new AQI7days(dateStr, 0, "2"));
+                list.add(new AQI7days(dateStr, aqi, "3"));
+            }
+        });
         return list;
     }
 
