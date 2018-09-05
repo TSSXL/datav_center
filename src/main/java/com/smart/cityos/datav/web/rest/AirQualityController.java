@@ -61,7 +61,42 @@ public class AirQualityController {
     @ApiOperation("获取站点状态列表")
     @PostMapping(value = "/getStationInfoList")
     public Result getStationInfoList(@RequestBody Map data) {
-        log.debug("根据ID获取12小时AQI趋势数据列表 : {}");
+        log.debug("获取站点状态列表 : {}");
         return new Result(airQualityService.getStationInfoList(data));
+    }
+
+    @ApiOperation("获取地图站点信息列表")
+    @PostMapping(value = "/getStationInfoMap")
+    public Result getStationInfoMap(@RequestBody Map data) {
+        log.debug("获取地图站点信息列表 : {}");
+        return new Result(airQualityService.getStationInfoMap(data));
+    }
+
+    @ApiOperation("获取地图站点信息")
+    @PostMapping(value = "/getStationInfo")
+    public Result getStationInfo(@RequestBody Map data) {
+        log.debug("获取地图站点信息 : {}");
+        return new Result(airQualityService.getStationInfo(data));
+    }
+
+    @ApiOperation("获取全市指标信息")
+    @PostMapping(value = "/getStationTargetInfo")
+    public Result getStationTargetInfo(@RequestBody Map data) {
+        log.debug("获取全市指标信息 : {}");
+        return new Result(airQualityService.getStationTargetInfo(data));
+    }
+
+    @ApiOperation("获取最新全市信息")
+    @PostMapping(value = "/getCityStationInfo")
+    public Result getCityStationInfo(@RequestBody Map data) {
+        log.debug("获取最新全市信息 : {}");
+        return new Result(airQualityService.getCityStationInfo(data));
+    }
+
+    @ApiOperation("获取最新更新时间点信息---已全市平均为准")
+    @PostMapping(value = "/getTimePointInfo")
+    public Result getTimePointInfo(@RequestBody Map data) {
+        log.debug("获取最新更新时间点信息---已全市平均为准 : {}");
+        return new Result(airQualityService.getTimePointInfo(data));
     }
 }
