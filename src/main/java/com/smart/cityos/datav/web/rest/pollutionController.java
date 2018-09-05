@@ -45,5 +45,26 @@ public class pollutionController {
         return new Result(pollutionService.getGasQyInfoList(data));
     }
 
+    @ApiOperation("获取企业地理坐标列表")
+    @PostMapping(value = "/getQyMapInfoList")
+    public Result getQyMapInfoList(@RequestBody Map data) {
+        log.debug("获取企业地理坐标列表 : {}");
+        return new Result(pollutionService.getQyMapInfoList(data));
+    }
+
+    @ApiOperation("获取废气企业详细信息")
+    @PostMapping(value = "/getGasQyInfo")
+    public Result getGasQyInfo(@RequestBody Map data) {
+        log.debug("获取废气企业详细信息 : {}");
+        return new Result(pollutionService.getGasQyInfo(data));
+    }
+
+    @ApiOperation("获取废水企业详细信息")
+    @PostMapping(value = "/getFsQyInfo")
+    public Result getFsQyInfo(@RequestBody Map data) {
+        log.debug("获取废水企业详细信息 : {}");
+        return new Result(pollutionService.getFsQyInfo(data));
+    }
+
 
 }

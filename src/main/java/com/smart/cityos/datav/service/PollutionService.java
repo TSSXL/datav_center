@@ -42,30 +42,16 @@ public class PollutionService {
     public List<Map> getFsQyInfoList(Map data) {
 
         List<Map> result=new ArrayList<Map>();
-        Map qyF=new HashMap();
-        qyF.put("qymc","宁波中华纸业有限公司  #1");
-        qyF.put("ph","7.957");
-        qyF.put("hxxyl","65.36");
-        qyF.put("fsll","7.957");
-        qyF.put("jcsj","2018-09-01 14时");
-
-        Map qyS=new HashMap();
-        qyS.put("qymc","宁波市江东北区污水处理厂#1");
-        qyS.put("ph","6.444");
-        qyS.put("hxxyl","21.6");
-        qyS.put("fsll","6.444");
-        qyS.put("jcsj","2018-09-01 14时");
-
-        Map qyT=new HashMap();
-        qyT.put("qymc","宁波经济技术开发区伟伟染业有限公司#1");
-        qyT.put("ph","6.444");
-        qyT.put("hxxyl","21.6");
-        qyT.put("fsll","6.444");
-        qyT.put("jcsj","2018-09-01 14时");
-
-        result.add(qyF);
-        result.add(qyS);
-        result.add(qyT);
+        Map nowQuery=new HashMap();
+        nowQuery.put("dbInfo",data.get("dbInfo"));
+        nowQuery.put("sql",data.get("sql"));
+        //获取最新记录
+        List<Map> re=configFeignService.executeQuery(nowQuery);
+        re.forEach(v -> {
+            v.put("id",v.get("GDSBID"));
+            v.put("qymc",v.get("QYMC")+"_"+v.get("PKMC"));
+            result.add(v);
+        });
         return result;
     }
 
@@ -77,37 +63,96 @@ public class PollutionService {
     public List<Map> getGasQyInfoList(Map data) {
 
         List<Map> result=new ArrayList<Map>();
+        Map nowQuery=new HashMap();
+        nowQuery.put("dbInfo",data.get("dbInfo"));
+        nowQuery.put("sql",data.get("sql"));
+        //获取最新记录
+        List<Map> re=configFeignService.executeQuery(nowQuery);
+        re.forEach(v -> {
+           v.put("id",v.get("GDSBID"));
+           v.put("qymc",v.get("QYMC")+"_"+v.get("PKMC"));
+           result.add(v);
+        });
 
-        Map qyF=new HashMap();
-        qyF.put("qymc","国电浙江北仑第一发电有限公司#2");
-        qyF.put("so2zs","16.2669");
-        qyF.put("yczs","3.44");
-        qyF.put("noxzs","37.91");
-        qyF.put("yqll","1821483.14");
-        qyF.put("jcsj","2018-09-01 14时");
 
-        Map qyS=new HashMap();
-        qyS.put("qymc","国电浙江北仑第一发电有限公司#1");
-        qyS.put("so2zs","16.2669");
-        qyS.put("yczs","3.44");
-        qyS.put("noxzs","37.91");
-        qyS.put("yqll","1821483.14");
-        qyS.put("jcsj","2018-09-01 14时");
+        return result;
+    }
 
-        Map qyT=new HashMap();
-        qyT.put("qymc","浙江浙能北仑发电有限公司#1");
-        qyT.put("so2zs","16.2669");
-        qyT.put("yczs","3.44");
-        qyT.put("noxzs","37.91");
-        qyT.put("yqll","1821483.14");
-        qyT.put("jcsj","2018-09-01 14时");
+    /**
+     * 获取企业地理坐标列表
+     *
+     * @return 12小时AQI趋势模型集合
+     */
+    public List<Map> getQyMapInfoList(Map data) {
 
-        result.add(qyF);
-        result.add(qyS);
-        result.add(qyT);
+
+        Map nowQuery=new HashMap();
+        nowQuery.put("dbInfo",data.get("dbInfo"));
+        nowQuery.put("sql",data.get("sql"));
+        //获取最新记录
+        List<Map> result=configFeignService.executeQuery(nowQuery);
+
         return result;
     }
 
 
+    /**
+     * 获取废气企业详细信息
+     *
+     * @return 12小时AQI趋势模型集合
+     */
+    public List<Map> getGasQyInfo(Map data) {
 
+        List<Map> result=new ArrayList<Map>();
+        String sql=""+data.get("sql");
+        sql=sql.replace("#id#",String.valueOf(data.get("id")));
+        Map nowQuery=new HashMap();
+        nowQuery.put("dbInfo",data.get("dbInfo"));
+        nowQuery.put("sql",sql);
+        System.out.println(sql);
+        //获取最新记录
+        List<Map> re=configFeignService.executeQuery(nowQuery);
+        Map map=new HashMap();
+        map.put("qy",re.get(0).get("QYMC"));
+        List<Map> pk=new ArrayList<Map>();
+        re.forEach(v -> {
+            v.put("id",v.get("GDSBID"));
+            v.put("pkmc",v.get("QYMC")+"_"+v.get("PKMC"));
+            pk.add(v);
+        });
+        map.put("pk",pk);
+        result.add(map);
+
+        return result;
+    }
+
+    /**
+     * 获取废水企业详细信息
+     *
+     * @return 12小时AQI趋势模型集合
+     */
+    public List<Map> getFsQyInfo(Map data) {
+
+        List<Map> result=new ArrayList<Map>();
+        String sql=""+data.get("sql");
+        sql=sql.replace("#id#",String.valueOf(data.get("id")));
+        Map nowQuery=new HashMap();
+        nowQuery.put("dbInfo",data.get("dbInfo"));
+        nowQuery.put("sql",sql);
+        System.out.println(sql);
+        //获取最新记录
+        List<Map> re=configFeignService.executeQuery(nowQuery);
+        Map map=new HashMap();
+        map.put("qy",re.get(0).get("QYMC"));
+        List<Map> pk=new ArrayList<Map>();
+        re.forEach(v -> {
+            v.put("id",v.get("GDSBID"));
+            v.put("pkmc",v.get("QYMC")+"_"+v.get("PKMC"));
+            pk.add(v);
+        });
+        map.put("pk",pk);
+        result.add(map);
+
+        return result;
+    }
 }
