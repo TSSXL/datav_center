@@ -57,8 +57,8 @@ public class AirQualityService {
         List<AQITrend> list = new ArrayList<AQITrend>();
 
 
-        String sql = "select * from " + data.get("tableName")
-                + " where stationId=" + data.get("id") + " order by TimePoint desc limit 0,12";
+        String sql =""+data.get("sql");
+        sql=sql.replace("#id#",String.valueOf(data.get("id")));
         Map query = new HashMap();
         query.put("dbInfo", data.get("dbInfo"));
         query.put("sql", sql);
@@ -89,7 +89,8 @@ public class AirQualityService {
      */
     public List<AQI7days> get7DaysAQITrend(Map data) {
         List<AQI7days> list = new ArrayList<>();
-        String sql = String.format("select  * from %s where  stationId=%s order by TimePoint  desc limit 7", data.get("tableName"), data.get("id"));
+        String sql=""+data.get("sql");
+        sql=sql.replace("#id#",String.valueOf(data.get("id")));
         Map<String, Object> query = new HashMap<>();
         query.put("dbInfo", data.get("dbInfo"));
         query.put("sql", sql);
@@ -157,10 +158,11 @@ public class AirQualityService {
             begin = tempStart.getTime();
         }
 
-        String sql = "select DATE_FORMAT(TimePoint ,'%Y-%m-%d') date,AQI from " + data.get("tableName") + " where stationId=" + data.get("stationId") + " and " +
-                "DATE_FORMAT(TimePoint ,'%Y-%m-%d')>='" + result.get(0)[0].toString() + "'  " +
-                "and DATE_FORMAT(TimePoint ,'%Y-%m-%d')<= '" + result.get(result.size() - 1)[0].toString() + "' order by TimePoint  desc";
 
+        String sql=""+data.get("sql");
+        sql=sql.replace("#id#",String.valueOf(data.get("id")));
+        sql=sql.replace("#startDate#",result.get(0)[0].toString());
+        sql=sql.replace("#endDate#",result.get(result.size() - 1)[0].toString());
 
         Map query = new HashMap();
         query.put("dbInfo", data.get("dbInfo"));
@@ -189,7 +191,7 @@ public class AirQualityService {
     public List<Map> getStationInfoList(Map data){
 
         //查询所有站点信息
-        String stationSql="select * from "+data.get("tableName")+" "+data.get("where");
+        String stationSql=""+data.get("stationSql");
 
         Map stationQuery=new HashMap();
         stationQuery.put("dbInfo",data.get("dbInfo"));
@@ -198,8 +200,7 @@ public class AirQualityService {
         List<Map> stations=configFeignService.executeQuery(stationQuery);
 
         //根据站点条数获取最新的实时信息
-        String statusSql="select h.*,DATE_FORMAT(h.TimePoint ,'%Y-%m-%d %H:%i:%s') formatTime from "
-                +data.get("hourTableName")+" h "+data.get("where")+" order by TimePoint desc limit 0,"+stations.size();
+        String statusSql=""+data.get("statusSql");
 
         Map statusQuery=new HashMap();
         statusQuery.put("dbInfo",data.get("dbInfo"));
@@ -260,7 +261,7 @@ public class AirQualityService {
     public List<Map> getStationInfoMap(Map data){
 
         //查询所有站点信息
-        String stationSql="select * from "+data.get("tableName")+" "+data.get("where");
+        String stationSql=""+data.get("stationSql");
 
         Map stationQuery=new HashMap();
         stationQuery.put("dbInfo",data.get("dbInfo"));
@@ -269,8 +270,7 @@ public class AirQualityService {
         List<Map> stations=configFeignService.executeQuery(stationQuery);
 
         //根据站点条数获取最新的实时信息
-        String statusSql="select h.*,DATE_FORMAT(h.TimePoint ,'%Y-%m-%d %H:%i:%s') formatTime from "
-                +data.get("hourTableName")+" h "+data.get("where")+" order by TimePoint desc limit 0,24";
+        String statusSql=""+data.get("statusSql");
 
         Map statusQuery=new HashMap();
         statusQuery.put("dbInfo",data.get("dbInfo"));
@@ -336,21 +336,22 @@ public class AirQualityService {
     public List<Map> getStationInfo(Map data){
 
         //查询所有站点信息
-        String stationSql="select * from "+data.get("tableName")+" "+data.get("where");
+        String stationSql=""+data.get("stationSql");
 
         Map stationQuery=new HashMap();
         stationQuery.put("dbInfo",data.get("dbInfo"));
         stationQuery.put("sql",stationSql);
+        System.out.println(stationSql);
 
         List<Map> stations=configFeignService.executeQuery(stationQuery);
 
         //根据站点条数获取最新的实时信息
-        String statusSql="select h.*,DATE_FORMAT(h.TimePoint ,'%Y-%m-%d %H:%i:%s') formatTime from "
-                +data.get("hourTableName")+" h  order by TimePoint desc limit 0,24";
+        String statusSql=""+data.get("statusSql");
 
         Map statusQuery=new HashMap();
         statusQuery.put("dbInfo",data.get("dbInfo"));
         statusQuery.put("sql",statusSql);
+        System.out.println(statusSql);
 
         List<Map> status=configFeignService.executeQuery(statusQuery);
 
@@ -411,8 +412,7 @@ public class AirQualityService {
 
 
         //根据站点条数获取最新的实时信息
-        String sql="select h.*,DATE_FORMAT(h.TimePoint ,'%Y-%m-%d %H:%i:%s') formatTime from "
-                +data.get("tableName")+" h where StationID=0 order by TimePoint desc limit 0,1";
+        String sql=""+data.get("sqlNow");
 
         Map nowQuery=new HashMap();
         nowQuery.put("dbInfo",data.get("dbInfo"));
@@ -437,9 +437,8 @@ public class AirQualityService {
         calendar.set(Calendar.HOUR,calendar.get(Calendar.HOUR) - 12);
         String dayTime=dFormat.format(calendar.getTime());
         //根据站点条数获取最新的12小时前信息
-        String halfSql="select h.*,DATE_FORMAT(h.TimePoint ,'%Y-%m-%d %H:%i:%s') formatTime from "
-                +data.get("tableName")+" h where StationID=0 and DATE_FORMAT(h.TimePoint ,'%Y-%m-%d %H:%i:%s')='"+
-                halfTime+"' order by h.TimePoint desc limit 0,1";
+        String halfSql=""+data.get("sqlLater");
+        halfSql=halfSql.replace("#date#",halfTime);
 
         Map halfQuery=new HashMap();
         halfQuery.put("dbInfo",data.get("dbInfo"));
@@ -448,9 +447,8 @@ public class AirQualityService {
         List<Map> halfTarget=configFeignService.executeQuery(halfQuery);
 
         //根据站点条数获取最新的24小时前信息
-        String daySql="select h.*,DATE_FORMAT(h.TimePoint ,'%Y-%m-%d %H:%i:%s') formatTime from "
-                +data.get("tableName")+" h where StationID=0 and DATE_FORMAT(h.TimePoint ,'%Y-%m-%d %H:%i:%s')='"+
-                dayTime+"' order by h.TimePoint desc limit 0,1";
+        String daySql=""+data.get("sqlLater");
+        daySql=daySql.replace("#date#",dayTime);
 
         Map dayQuery=new HashMap();
         dayQuery.put("dbInfo",data.get("dbInfo"));
@@ -505,8 +503,7 @@ public class AirQualityService {
 
 
         //根据站点条数获取最新的实时信息
-        String sql="select h.*,DATE_FORMAT(h.TimePoint ,'%Y-%m-%d %H:%i:%s') formatTime from "
-                +data.get("tableName")+" h where StationID=0 order by TimePoint desc limit 0,1";
+        String sql=""+data.get("sql");
 
         Map nowQuery=new HashMap();
         nowQuery.put("dbInfo",data.get("dbInfo"));
@@ -541,9 +538,9 @@ public class AirQualityService {
     public List<Map> getTimePointInfo(Map data){
 
 
+
         //根据站点条数获取最新的实时信息
-        String sql="select DATE_FORMAT(h.TimePoint ,'%Y-%m-%d %H:%i:%s') formatTime from "
-                +data.get("tableName")+" h where StationID=0 order by TimePoint desc limit 0,1";
+        String sql=""+data.get("sql");
 
         Map nowQuery=new HashMap();
         nowQuery.put("dbInfo",data.get("dbInfo"));
