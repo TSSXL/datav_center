@@ -341,7 +341,6 @@ public class AirQualityService {
         Map stationQuery=new HashMap();
         stationQuery.put("dbInfo",data.get("dbInfo"));
         stationQuery.put("sql",stationSql);
-        System.out.println(stationSql);
 
         List<Map> stations=configFeignService.executeQuery(stationQuery);
 
@@ -351,7 +350,6 @@ public class AirQualityService {
         Map statusQuery=new HashMap();
         statusQuery.put("dbInfo",data.get("dbInfo"));
         statusQuery.put("sql",statusSql);
-        System.out.println(statusSql);
 
         List<Map> status=configFeignService.executeQuery(statusQuery);
 
@@ -417,7 +415,6 @@ public class AirQualityService {
         Map nowQuery=new HashMap();
         nowQuery.put("dbInfo",data.get("dbInfo"));
         nowQuery.put("sql",sql);
-        System.out.println(sql);
         //获取最新记录
         List<Map> nowTarget=configFeignService.executeQuery(nowQuery);
         //最新记录
@@ -430,7 +427,6 @@ public class AirQualityService {
         }catch (ParseException px){
             dt=new Date();
         }
-        System.out.println(dt);
         calendar.setTime(dt);
         calendar.set(Calendar.HOUR,calendar.get(Calendar.HOUR) - 12);
         String halfTime=dFormat.format(calendar.getTime());

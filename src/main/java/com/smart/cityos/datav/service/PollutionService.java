@@ -138,7 +138,6 @@ public class PollutionService {
         Map nowQuery=new HashMap();
         nowQuery.put("dbInfo",data.get("dbInfo"));
         nowQuery.put("sql",sql);
-        System.out.println(sql);
         //获取最新记录
         List<Map> re=configFeignService.executeQuery(nowQuery);
         Map map=new HashMap();
