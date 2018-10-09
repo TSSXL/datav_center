@@ -86,12 +86,13 @@ public class ComponentController {
   }
 
   @DeleteMapping("/{id}")
+  @ApiOperation("删除指定id可视化组件")
   public void delete(@PathVariable String id) {
     componentService.delete(id);
   }
 
   @GetMapping("/item/{id}")
-  @ApiOperation("")
+  @ApiOperation("获取可视化组件详细信息")
   public Component get(@PathVariable String id) {
     return componentService.get(id);
   }

@@ -2,6 +2,7 @@ package com.smart.cityos.datav.service;
 
 import com.smart.cityos.datav.domain.Screen;
 import com.smart.cityos.datav.domain.model.ScreenModel;
+import com.smart.cityos.datav.domain.model.ScreenQueryBody;
 import com.smart.cityos.datav.repository.ScreenRepository;
 import java.util.Calendar;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,13 @@ public class ScreenService {
   @Autowired
   private ScreenRepository screenRepository;
 
-  public Page<Screen> fetch(Pageable pageable) {
-    return screenRepository.findAll(pageable);
+  public Page<Screen> fetch(ScreenQueryBody screenQueryBody,Pageable pageable) {
+    if (screenQueryBody == null || screenQueryBody.getRefApp().isEmpty()) {
+      return screenRepository.findAll(pageable);
+    } else {
+      return screenRepository
+          .findAllByRefApp("ObjectId(\"" + screenQueryBody.getRefApp() + "\")", pageable);
+    }
   }
 
   public void add(ScreenModel screenModel) {
