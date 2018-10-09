@@ -37,6 +37,7 @@ public class ConfigFeignService {
     }
 
 
+
     /**
      * 通过feign 通用sql查询mysql
      */
@@ -54,6 +55,8 @@ public class ConfigFeignService {
         List<Map> list = feignServer.tableQuery(executeQueryParam);
         return list;
     }
+
+
 
     /**
      * 下发配置
