@@ -1,6 +1,7 @@
 package com.smart.cityos.datav.repository;
 
 import com.smart.cityos.datav.domain.Screen;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -23,5 +24,5 @@ public interface ScreenRepository extends MongoRepository<Screen, String> {
    * @param pageable
    * @return
    */
-  Page<Screen> findAllByRefApp(String refApp, Pageable pageable);
+  Page<Screen> findAllByRefApp(ObjectId refApp, Pageable pageable);
 }

@@ -5,6 +5,7 @@ import com.smart.cityos.datav.domain.model.ScreenModel;
 import com.smart.cityos.datav.domain.model.ScreenQueryBody;
 import com.smart.cityos.datav.repository.ScreenRepository;
 import java.util.Calendar;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +30,7 @@ public class ScreenService {
       return screenRepository.findAll(pageable);
     } else {
       return screenRepository
-          .findAllByRefApp("ObjectId(\"" + screenQueryBody.getRefApp() + "\")", pageable);
+          .findAllByRefApp(new ObjectId(screenQueryBody.getRefApp()), pageable);
     }
   }
 
@@ -39,7 +40,7 @@ public class ScreenService {
     screen.setComponents(screenModel.getComponents());
     screen.setDesc(screenModel.getDesc());
     screen.setName(screenModel.getName());
-    screen.setRefApp(screenModel.getRefApp());
+    screen.setRefApp(new ObjectId( screenModel.getRefApp()));
     screen.setTag(screenModel.getTag());
     screen.setVersion(screenModel.getVersion());
     screen.setPage(screenModel.getPage());
@@ -57,7 +58,7 @@ public class ScreenService {
     screen.setComponents(screenModel.getComponents());
     screen.setDesc(screenModel.getDesc());
     screen.setName(screenModel.getName());
-    screen.setRefApp(screenModel.getRefApp());
+    screen.setRefApp(new ObjectId( screenModel.getRefApp()));
     screen.setTag(screenModel.getTag());
     screen.setVersion(screenModel.getVersion());
     screen.setPage(screenModel.getPage());
