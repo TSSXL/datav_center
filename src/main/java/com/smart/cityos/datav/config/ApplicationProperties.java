@@ -36,6 +36,27 @@ public class ApplicationProperties {
     @Setter
     private String sqlControllerUrl;
 
+    /**
+     * 监控数据地址
+     */
+    @Getter
+    @Setter
+    private String monitorControllerUrl;
+
+    /**
+     * server数据地址
+     */
+    @Getter
+    @Setter
+    private String serverControllerUrl;
+
+    /**
+     * monitorweb数据地址
+     */
+    @Getter
+    @Setter
+    private String monitorWebControllerUrl;
+
 
     public static class Async {
 
