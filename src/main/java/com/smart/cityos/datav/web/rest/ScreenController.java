@@ -2,9 +2,11 @@ package com.smart.cityos.datav.web.rest;
 
 import com.smart.cityos.datav.domain.Screen;
 import com.smart.cityos.datav.domain.model.ScreenModel;
+import com.smart.cityos.datav.domain.model.ScreenQueryBody;
 import com.smart.cityos.datav.service.ScreenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +46,12 @@ public class ScreenController {
   @PostMapping("/list/cover")
   @ApiOperation("可视化设计列表接口")
   public Page<Screen> list(@RequestParam Long pageNo, @RequestParam Long pageSize,
-      @RequestParam String sort, @RequestParam Long order) {
+      @RequestParam String sort, @RequestParam Long order,@RequestBody List< ScreenQueryBody> screenQueryBody) {
     Sort sort1 = new Sort((order.equals(1) ? Direction.ASC : Direction.DESC),
         (sort.isEmpty() ? "_id" : sort));
     Pageable pageable = new PageRequest(pageNo.intValue(), pageSize.intValue(), sort1);
-    return screenService.fetch(pageable);
+    return screenService
+        .fetch(screenQueryBody.size() > 0 ? screenQueryBody.get(0) : null, pageable);
   }
 
   @PostMapping("")
@@ -70,6 +73,7 @@ public class ScreenController {
   }
 
   @GetMapping("/{id}")
+  @ApiOperation("")
   public Screen get(@PathVariable String id) {
     return screenService.get(id);
   }

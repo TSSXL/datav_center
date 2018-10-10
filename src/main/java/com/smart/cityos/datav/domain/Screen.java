@@ -3,6 +3,7 @@ package com.smart.cityos.datav.domain;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -54,7 +55,7 @@ private String id;
   /**
    * 关联应用
    */
-  private String refApp;
+  private ObjectId refApp;
   /**
    * 组件
    */
