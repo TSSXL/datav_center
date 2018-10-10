@@ -26,7 +26,8 @@ public class ScreenService {
   private ScreenRepository screenRepository;
 
   public Page<Screen> fetch(ScreenQueryBody screenQueryBody,Pageable pageable) {
-    if (screenQueryBody == null || screenQueryBody.getRefApp().isEmpty()) {
+    if (screenQueryBody == null || screenQueryBody.getRefApp() == null || screenQueryBody
+        .getRefApp().isEmpty()) {
       return screenRepository.findAll(pageable);
     } else {
       return screenRepository
