@@ -35,7 +35,7 @@ public class ScreenService {
     }
   }
 
-  public void add(ScreenModel screenModel) {
+  public Screen add(ScreenModel screenModel) {
 
     Screen screen = new Screen();
     screen.setComponents(screenModel.getComponents());
@@ -50,6 +50,7 @@ public class ScreenService {
     screen.setModifyDate(Calendar.getInstance().getTime());
 
     screenRepository.save(screen);
+    return screen;
   }
 
 

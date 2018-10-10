@@ -1,5 +1,6 @@
 package com.smart.cityos.datav.web.rest;
 
+import com.smart.cityos.datav.domain.Result;
 import com.smart.cityos.datav.domain.Screen;
 import com.smart.cityos.datav.domain.model.ScreenModel;
 import com.smart.cityos.datav.domain.model.ScreenQueryBody;
@@ -54,16 +55,17 @@ public class ScreenController {
         .fetch(screenQueryBody.size() > 0 ? screenQueryBody.get(0) : null, pageable);
   }
 
-  @PostMapping("")
-  @ApiOperation("新增可视化设计")
-  public void add(@RequestBody ScreenModel screenModel) {
-    screenService.add(screenModel);
-  }
+    @PostMapping("")
+    @ApiOperation("新增可视化设计")
+    public String add(@RequestBody ScreenModel screenModel) {
+      Screen screen = screenService.add(screenModel);
+      return screen.getId();
+    }
 
-  @PutMapping("/{id}")
-  @ApiOperation("编辑可视化设计")
-  public void edit(@PathVariable String id, @RequestBody ScreenModel screenModel) {
-    screenService.edit(id, screenModel);
+    @PutMapping("/{id}")
+    @ApiOperation("编辑可视化设计")
+    public void edit(@PathVariable String id, @RequestBody ScreenModel screenModel) {
+      screenService.edit(id, screenModel);
   }
 
   @DeleteMapping("/{id}")
