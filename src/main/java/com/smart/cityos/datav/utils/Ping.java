@@ -92,12 +92,12 @@ public class Ping {
                 if(ind>-1){
                     String useTimeLine=line.substring(ind);
                     System.out.println(useTimeLine);
+                    //案例字符串：min/avg/max/mdev = 0.045/0.068/0.116/0.034 ms
                     String[] useTimeArr=useTimeLine.split("=");
-                    System.out.print(useTimeArr[0]+":"+useTimeArr[1]);
+                    //案例字符串:min/avg/max/mdev
                     String[] titleArr=useTimeArr[0].split("/");
-                    System.out.print("titleArr:"+titleArr);
+                    //案例字符串:0.045/0.068/0.116/0.034 ms
                     String[] valueArr=useTimeArr[1].split("/");
-                    System.out.print("valueArr:"+valueArr);
                     int avgIndex=0;
                     //获取平均时间下标
                     for (int i=0;i<titleArr.length;i++){
@@ -109,6 +109,9 @@ public class Ping {
                     }
                     String avgValue=valueArr[avgIndex];
                     System.out.println(avgValue);
+                    Float v=Float.parseFloat(avgValue);
+                    statusMap.put("time",v*1000);
+
 
                 }
 
