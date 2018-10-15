@@ -379,9 +379,11 @@ public class MonitorFeignService {
                 result.add(style);
                 continue;
             }
+            System.out.println("监控状态:"+re.get("alertLevel"));
              //ping ip详情
             Map timeData=(Map)((List)data.get("timeDatas")).get(i);
 
+            System.out.println("网络状态:"+timeData);
 
             if(Integer.parseInt(re.get("alertLevel").toString())==0){
                 //获取主机状态所需参数
