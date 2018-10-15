@@ -115,7 +115,7 @@ public class Ping {
 
                 }
 
-                connectedCount += getCheckResult(line);
+                connectedCount += getCheckLinuxResult(line);
             }   // 如果出现类似=23ms TTL=62这样的字样,出现的次数=测试次数则返回真
             statusMap.put("status",connectedCount == pingTimes);
             return statusMap;
@@ -134,6 +134,16 @@ public class Ping {
     //若line含有=18ms TTL=16字样,说明已经ping通,返回1,否則返回0.
     private static int getCheckResult(String line) {  // System.out.println("控制台输出的结果为:"+line);
         Pattern pattern =  java.util.regex.Pattern.compile("(\\d+ms)(\\s+)(TTL=\\d+)",Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(line);
+        while (matcher.find()) {
+            return 1;
+        }
+        return 0;
+    }
+
+    //若line含有TTL=16字样,说明已经ping通,返回1,否則返回0.
+    private static int getCheckLinuxResult(String line) {  // System.out.println("控制台输出的结果为:"+line);
+        Pattern pattern =  java.util.regex.Pattern.compile("(TTL=\\d+)",Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(line);
         while (matcher.find()) {
             return 1;
