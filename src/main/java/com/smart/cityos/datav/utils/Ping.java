@@ -88,6 +88,7 @@ public class Ping {
             while ((line = in.readLine()) != null) {
                 System.out.println(line);
                 int ind=line.indexOf("min/avg/max");
+                System.out.println("时间下标："+ind);
                 if(ind>-1){
                     String useTimeLine=line.substring(ind);
                     System.out.println(useTimeLine);
