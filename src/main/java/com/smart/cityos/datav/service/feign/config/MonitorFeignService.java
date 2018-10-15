@@ -375,20 +375,22 @@ public class MonitorFeignService {
             //获取监控状态
             Map re=feignServer.getMonitorInfoBySrcId(srcMap);
             if(re==null || re.get("alertLevel")==null){
+                System.out.println("服务器"+i+"获取状态异常");
                 style=style.replaceAll("#color#","#ff688f");
                 result.add(style);
                 continue;
             }
-            System.out.println("监控状态:"+re.get("alertLevel"));
+            System.out.println("监控状态"+i+":"+re.get("alertLevel"));
              //ping ip详情
             Map timeData=(Map)((List)data.get("timeDatas")).get(i);
 
-            System.out.println("网络状态:"+timeData);
+
 
             if(Integer.parseInt(re.get("alertLevel").toString())==0){
                 //获取主机状态所需参数
                 Map pingTime= Ping.ping(timeData.get("ip").toString(),(Integer) timeData.get("timeSize"), (Integer) timeData.get("timeOut"));
 
+                System.out.println("网络状态"+i+":"+pingTime);
                 //获取延迟
                 int time=Integer.parseInt(pingTime.get("time").toString().trim());
                 //预警延迟
