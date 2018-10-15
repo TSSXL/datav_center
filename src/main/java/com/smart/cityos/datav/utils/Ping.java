@@ -136,9 +136,9 @@ public class Ping {
         return 0;
     }
 
-    //若line含有TTL=16字样,说明已经ping通,返回1,否則返回0.
+    //若line含有ttl=64字样,说明已经ping通,返回1,否則返回0.
     private static int getCheckLinuxResult(String line) {  // System.out.println("控制台输出的结果为:"+line);
-        Pattern pattern =  java.util.regex.Pattern.compile("(TTL=\\d+)",Pattern.CASE_INSENSITIVE);
+        Pattern pattern =  java.util.regex.Pattern.compile("(ttl=\\d+)",Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(line);
         while (matcher.find()) {
             return 1;
