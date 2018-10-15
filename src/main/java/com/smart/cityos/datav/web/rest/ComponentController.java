@@ -60,7 +60,7 @@ public class ComponentController {
       @RequestBody List<QueryBody> queryBodies) {
     Sort sort1 = new Sort((order.equals(1) ? Direction.ASC : Direction.DESC),
         (sort.isEmpty() ? "_id" : sort));
-    Pageable pageable = new PageRequest(currentPage.intValue(), pageSize.intValue(), sort1);
+    Pageable pageable = new PageRequest(currentPage.intValue() - 1, pageSize.intValue(), sort1);
     Optional<QueryBody> optionalQueryBody = queryBodies.stream()
         .filter(x -> "label".equals(x.getName())).findFirst();
     Page<Component> componentPage = componentService

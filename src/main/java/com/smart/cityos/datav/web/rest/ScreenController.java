@@ -1,6 +1,5 @@
 package com.smart.cityos.datav.web.rest;
 
-import com.smart.cityos.datav.domain.Result;
 import com.smart.cityos.datav.domain.Screen;
 import com.smart.cityos.datav.domain.model.ScreenModel;
 import com.smart.cityos.datav.domain.model.ScreenQueryBody;
