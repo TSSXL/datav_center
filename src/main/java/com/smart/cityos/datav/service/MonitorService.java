@@ -182,8 +182,14 @@ public class MonitorService {
     public List<Map> getSerivceIpStatus(Map timeData) {
         List<Map> result=new ArrayList<>();
 
-        Map pingTime= Ping.ping(timeData.get("ip").toString(),(Integer) timeData.get("timeSize"), (Integer) timeData.get("timeOut"));
+        String serverType=String.valueOf(timeData.get("serverType"));
+        Map pingTime= new HashMap();
+        if("linux".equals(serverType)){
+            pingTime=Ping.linuxPing(timeData.get("ip").toString(),(Integer) timeData.get("timeSize"));
+        }else{
+            pingTime=Ping.windowsPing(timeData.get("ip").toString(),(Integer) timeData.get("timeSize"), (Integer) timeData.get("timeOut"));
 
+        }
 
         result.add(pingTime);
 

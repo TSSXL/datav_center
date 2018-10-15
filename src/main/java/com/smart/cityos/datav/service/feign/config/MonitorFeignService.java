@@ -388,7 +388,14 @@ public class MonitorFeignService {
 
             if(Integer.parseInt(re.get("alertLevel").toString())==0){
                 //获取主机状态所需参数
-                Map pingTime= Ping.ping(timeData.get("ip").toString(),(Integer) timeData.get("timeSize"), (Integer) timeData.get("timeOut"));
+                String serverType=String.valueOf(timeData.get("serverType"));
+                Map pingTime= new HashMap();
+                if("linux".equals(serverType)){
+                    pingTime=Ping.linuxPing(timeData.get("ip").toString(),(Integer) timeData.get("timeSize"));
+                }else{
+                    pingTime=Ping.windowsPing(timeData.get("ip").toString(),(Integer) timeData.get("timeSize"), (Integer) timeData.get("timeOut"));
+
+                }
 
                 String ip=timeData.get("ip").toString();
                 System.out.println("网络状态"+i+"("+ip+"):"+pingTime);
