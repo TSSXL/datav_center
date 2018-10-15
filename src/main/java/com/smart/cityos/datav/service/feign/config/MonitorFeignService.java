@@ -390,7 +390,8 @@ public class MonitorFeignService {
                 //获取主机状态所需参数
                 Map pingTime= Ping.ping(timeData.get("ip").toString(),(Integer) timeData.get("timeSize"), (Integer) timeData.get("timeOut"));
 
-                System.out.println("网络状态"+i+":"+pingTime);
+                String ip=timeData.get("ip").toString();
+                System.out.println("网络状态"+i+"("+ip+"):"+pingTime);
                 //获取延迟
                 int time=Integer.parseInt(pingTime.get("time").toString().trim());
                 //预警延迟
