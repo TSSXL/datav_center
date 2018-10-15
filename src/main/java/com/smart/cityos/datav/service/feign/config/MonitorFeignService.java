@@ -390,7 +390,6 @@ public class MonitorFeignService {
                 //获取主机状态所需参数
                 String serverType=String.valueOf(data.get("serverType"));
                 Map pingTime= new HashMap();
-                System.out.println(serverType);
                 if("linux".equals(serverType)){
                     pingTime=Ping.linuxPing(timeData.get("ip").toString(),(Integer) timeData.get("timeSize"));
                 }else{
