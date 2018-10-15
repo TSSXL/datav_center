@@ -85,10 +85,30 @@ public class Ping {
             int connectedCount = 0;
             String line = null;
             String time="";
-            System.out.println(in.lines());
             while ((line = in.readLine()) != null) {
                 System.out.println(line);
+                int ind=line.indexOf("min/avg/max");
+                if(ind>-1){
+                    String useTimeLine=line.substring(ind);
+                    System.out.println(useTimeLine);
+                    String[] useTimeArr=useTimeLine.split("=");
+                    System.out.print(useTimeArr);
+                    String[] titleArr=useTimeArr[0].split("/");
+                    System.out.print(titleArr);
+                    String[] valueArr=useTimeArr[1].split("/");
+                    System.out.print(valueArr);
+                    int avgIndex=0;
+                    //获取平均时间下标
+                    for (int i=0;i<titleArr.length;i++){
+                        if("avg".equals(titleArr[i])){
+                            avgIndex=i;
+                            break;
+                        }
+                    }
+                    String avgValue=valueArr[avgIndex];
+                    System.out.println(avgValue);
 
+                }
 
                 connectedCount += getCheckResult(line);
             }   // 如果出现类似=23ms TTL=62这样的字样,出现的次数=测试次数则返回真
