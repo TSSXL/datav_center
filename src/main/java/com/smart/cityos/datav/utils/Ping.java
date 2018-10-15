@@ -93,14 +93,15 @@ public class Ping {
                     String useTimeLine=line.substring(ind);
                     System.out.println(useTimeLine);
                     String[] useTimeArr=useTimeLine.split("=");
-                    System.out.print(useTimeArr);
+                    System.out.print(useTimeArr[0]+":"+useTimeArr[1]);
                     String[] titleArr=useTimeArr[0].split("/");
-                    System.out.print(titleArr);
+                    System.out.print("titleArr:"+titleArr);
                     String[] valueArr=useTimeArr[1].split("/");
-                    System.out.print(valueArr);
+                    System.out.print("valueArr:"+valueArr);
                     int avgIndex=0;
                     //获取平均时间下标
                     for (int i=0;i<titleArr.length;i++){
+                        System.out.println(titleArr[i]);
                         if("avg".equals(titleArr[i])){
                             avgIndex=i;
                             break;
