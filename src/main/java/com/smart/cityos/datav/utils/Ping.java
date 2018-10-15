@@ -110,7 +110,7 @@ public class Ping {
                     String avgValue=valueArr[avgIndex];
                     System.out.println(avgValue);
                     Float v=Float.parseFloat(avgValue);
-                    statusMap.put("time",v*1000);
+                    statusMap.put("time",Integer.parseInt(String.valueOf(v*1000)));
 
 
                 }
