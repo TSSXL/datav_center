@@ -45,25 +45,26 @@ public class ScreenController {
 
   @PostMapping("/list/cover")
   @ApiOperation("可视化设计列表接口")
-  public Page<Screen> list(@RequestParam Long pageNo, @RequestParam Long pageSize,
+  public Page<Screen> list(@RequestParam Long currentPage, @RequestParam Long pageSize,
       @RequestParam String sort, @RequestParam Long order,@RequestBody List< ScreenQueryBody> screenQueryBody) {
     Sort sort1 = new Sort((order.equals(1) ? Direction.ASC : Direction.DESC),
         (sort.isEmpty() ? "_id" : sort));
-    Pageable pageable = new PageRequest(pageNo.intValue(), pageSize.intValue(), sort1);
+    Pageable pageable = new PageRequest((currentPage.intValue() - 1), pageSize.intValue(), sort1);
     return screenService
         .fetch(screenQueryBody.size() > 0 ? screenQueryBody.get(0) : null, pageable);
   }
 
-  @PostMapping("")
-  @ApiOperation("新增可视化设计")
-  public void add(@RequestBody ScreenModel screenModel) {
-    screenService.add(screenModel);
-  }
+    @PostMapping("")
+    @ApiOperation("新增可视化设计")
+    public String add(@RequestBody ScreenModel screenModel) {
+      Screen screen = screenService.add(screenModel);
+      return screen.getId();
+    }
 
-  @PutMapping("/{id}")
-  @ApiOperation("编辑可视化设计")
-  public void edit(@PathVariable String id, @RequestBody ScreenModel screenModel) {
-    screenService.edit(id, screenModel);
+    @PutMapping("/{id}")
+    @ApiOperation("编辑可视化设计")
+    public void edit(@PathVariable String id, @RequestBody ScreenModel screenModel) {
+      screenService.edit(id, screenModel);
   }
 
   @DeleteMapping("/{id}")

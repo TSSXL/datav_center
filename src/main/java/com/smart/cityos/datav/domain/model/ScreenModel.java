@@ -1,9 +1,10 @@
 package com.smart.cityos.datav.domain.model;
 
-import java.sql.Date;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
+
+import java.util.List;
 
 /**
  * <p>title:</p>
@@ -44,7 +45,7 @@ public class ScreenModel {
   /**
    * 关联应用
    */
-  private String refApp;
+  private ObjectId refApp;
   /**
    * 组件
    */
