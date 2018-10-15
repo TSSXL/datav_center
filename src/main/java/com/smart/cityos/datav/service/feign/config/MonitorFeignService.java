@@ -2,6 +2,7 @@ package com.smart.cityos.datav.service.feign.config;
 
 
 import com.smart.cityos.datav.config.ApplicationProperties;
+import com.smart.cityos.datav.utils.Ping;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
@@ -347,5 +348,76 @@ public class MonitorFeignService {
         int[] result={successCount,warningCount,errorCount,nullCount};
 
         return result;
+    }
+
+    /**
+     * 获取服务器监控状态列表
+     * @param data
+     * @return
+     */
+    public List<String> getSerivceMonitorStatus(Map data){
+        List<String> result=new ArrayList<>();
+        Map status=new HashMap();
+
+        FeignServer feignServer = createMonitorFeignServer();
+
+
+        List srcArr=(List) data.get("srcArr");
+
+        for(int i=0;i<srcArr.size();i++){
+            Object src=srcArr.get(i);
+
+            //样式模板
+            String style=data.get("style").toString();
+            String color="";
+            Map srcMap=new HashMap();
+            srcMap.put("objectSrcId",src);
+            //获取监控状态
+            Map re=feignServer.getMonitorInfoBySrcId(srcMap);
+            if(re==null || re.get("alertLevel")==null){
+                style=style.replaceAll("#color#","#ff688f");
+                result.add(style);
+                continue;
+            }
+             //ping ip详情
+            Map timeData=(Map)((List)data.get("timeDatas")).get(i);
+
+
+            if(Integer.parseInt(re.get("alertLevel").toString())==0){
+                //获取主机状态所需参数
+                Map pingTime= Ping.ping(timeData.get("ip").toString(),(Integer) timeData.get("timeSize"), (Integer) timeData.get("timeOut"));
+
+                //获取延迟
+                int time=Integer.parseInt(pingTime.get("time").toString().trim());
+                //预警延迟
+                int warningTime=Integer.parseInt(timeData.get("warningWifiLimit").toString());
+                //告警延迟
+                int errorTime=Integer.parseInt(timeData.get("errorWifiLimit").toString());
+                //连接失败返回告警
+
+                if(!Boolean.parseBoolean(pingTime.get("status").toString())){
+                    style=style.replaceAll("#color#","#ff688f");
+                }else if(time>=0 && time<warningTime){
+                    //延迟低于预警为正常
+                    style=style.replaceAll("#color#","#6cd888");
+                }else if(time>=warningTime && time<errorTime){
+                    //延迟高于预警低于告警为一般
+                    style=style.replaceAll("#color#","#fff280");
+                }else{
+                    //延迟高于告警为异常
+                    style=style.replaceAll("#color#","#ff688f");
+                }
+            }else if(Integer.parseInt(re.get("alertLevel").toString())==1){
+
+                style=style.replaceAll("#color#","#fff280");
+            }else{
+                style=style.replaceAll("#color#","#ff688f");
+            }
+            result.add(style);
+        }
+
+
+        return result;
+
     }
 }
