@@ -85,6 +85,7 @@ public class Ping {
             int connectedCount = 0;
             String line = null;
             String time="";
+            System.out.println(in.lines());
             while ((line = in.readLine()) != null) {
                 System.out.println(line);
 
