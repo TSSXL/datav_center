@@ -85,6 +85,8 @@ public class MonitorFeignService {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.HOUR_OF_DAY, 0-i);
             hours[11-i]=dFormat.format(cal.getTime());
+            System.out.println(cal.getTime());
+            System.out.println(dFormat.format(cal.getTime()));
         }
         //初始化查询参数
         Map queryMap=new HashMap();
