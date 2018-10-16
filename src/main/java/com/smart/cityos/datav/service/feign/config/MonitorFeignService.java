@@ -245,7 +245,7 @@ public class MonitorFeignService {
         Map reMap=new HashMap();
 
         Map re=feignServer.getMonitorInfoBySrcId(data);
-        if(re==null){
+        if(re==null || re.get("alertLevel")==null){
             reMap.put("value",data.get("errorImg"));
         }else if(Integer.parseInt(re.get("alertLevel").toString())==0){
             reMap.put("value",data.get("successImg"));
