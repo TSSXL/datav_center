@@ -79,14 +79,16 @@ public class MonitorFeignService {
     public List<Map> getNodeDataCount(List<String> nodes,String type){
         FeignServer feignWebServer = createMonitorWebFeignServer();
         SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH");
+        //设置时区
+        dFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         String[] hours=new String[12];
         for(int i=0;i<12;i++){
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.HOUR_OF_DAY, 0-i);
+            //加8小时才是北京时间
+            cal.add(Calendar.HOUR, 8);
             hours[11-i]=dFormat.format(cal.getTime());
-            System.out.println(cal.getTime());
-            System.out.println(dFormat.format(cal.getTime()));
         }
         //初始化查询参数
         Map queryMap=new HashMap();
