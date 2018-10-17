@@ -304,7 +304,13 @@ public class AirQualityService {
                     Object[] x={station.get("Longitude"),station.get("Latitude"),ss.get("AQI")};
                     map.put("name",station.get("PositionName"));
                     //map.put("id",station.get("StationID"));
-                    map.put("value",x);
+                    if("杭州湾职校（杭州湾）".equals(station.get("PositionName"))){
+                        Object[] hzx={"121.21139","30.325372","82"};
+                        map.put("value",hzx);
+                    }else{
+                        map.put("value",x);
+                    }
+
                     int aqi=Integer.parseInt(String.valueOf(ss.get("AQI")));
                     Map nomal=new HashMap();
                     Map color=new HashMap();
