@@ -17,9 +17,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Data
 @Document(collection = "screens")
-public class Screen {
+public class Screen implements Cloneable {
+
   @Id
-private String id;
+  private String id;
   /**
    * 创建时间
    */
@@ -41,7 +42,7 @@ private String id;
    */
   private List<String> tag;
   /**
-   *  发布
+   * 发布
    */
   private Object publish;
   /**
@@ -60,4 +61,15 @@ private String id;
    * 组件
    */
   private List<Object> components;
+
+  @Override
+  public Object clone() {
+    Screen screen = null;
+    try {
+      screen = (Screen) super.clone();
+    } catch (CloneNotSupportedException e) {
+      e.printStackTrace();
+    }
+    return screen;
+  }
 }

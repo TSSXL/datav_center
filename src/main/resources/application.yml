@@ -15,8 +15,8 @@ spring:
       #password: portal@2017
   http:
     multipart:
-      max-file-size: 16MB
-      max-request-size: 16MB
+    max-file-size: 16MB
+    max-request-size: 16MB
   application :
     name: "datav"
 
