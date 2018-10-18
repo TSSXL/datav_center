@@ -32,5 +32,6 @@ application:
     queueCapacity: 1000
   sql-controller-url : "http://192.168.10.11:31256/"
   monitor-controller-url : "http://192.168.10.11:31544/"
+  #monitor-controller-url : "http://localhost:8088/"
   server-controller-url : "http://192.168.10.11:31680/"
   monitor-web-controller-url : "http://192.168.10.11:31921/"

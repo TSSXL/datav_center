@@ -137,6 +137,14 @@ public interface FeignServer {
   List<Map> getMonitorByRef();
 
   /**
+   * 获取服务器监控状态列表
+   * @return 返回接口处理后信息
+   */
+  @RequestLine("GET api/object/getMonitorByRef")
+  @Headers("Content-Type: application/json")
+  List<Map> getSerivceMonitorStatus();
+
+  /**
    * 通过feign远程调度部署选项到指定地址接口
    * @param deployOption 部署选项
    * @return 返回接口处理后信息

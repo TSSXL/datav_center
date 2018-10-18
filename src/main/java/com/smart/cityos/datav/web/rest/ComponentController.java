@@ -1,6 +1,7 @@
 package com.smart.cityos.datav.web.rest;
 
 import com.smart.cityos.datav.domain.Component;
+import com.smart.cityos.datav.domain.Result;
 import com.smart.cityos.datav.domain.model.ComponentInfo;
 import com.smart.cityos.datav.domain.model.ComponentModel;
 import com.smart.cityos.datav.domain.model.QueryBody;
@@ -8,6 +9,7 @@ import com.smart.cityos.datav.service.ComponentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -96,4 +98,12 @@ public class ComponentController {
   public Component get(@PathVariable String id) {
     return componentService.get(id);
   }
+
+  @PostMapping("/getDayFormat")
+  @ApiOperation("获取转换后的日期")
+  public Result getDayFormat(@RequestBody Map data) {
+    log.debug("获取转换后的日期 : {}");
+    return new Result(componentService.getDayFormat(data));
+  }
+
 }

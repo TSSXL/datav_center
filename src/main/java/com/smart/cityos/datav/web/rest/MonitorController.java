@@ -79,5 +79,25 @@ public class MonitorController {
         return new Result(monitorService.getRefMonitorStatus(data));
     }
 
+    @ApiOperation("获取服务器详细状态")
+    @PostMapping(value = "/getSerivceStatus")
+    public Result getSerivceStatus(@RequestBody Map data) {
+        log.debug("获取服务器详细状态 : {}");
+        return new Result(monitorService.getSerivceStatus(data));
+    }
+
+    @ApiOperation("获取服务器连接状态")
+    @PostMapping(value = "/getSerivceIpStatus")
+    public Result getSerivceIpStatus(@RequestBody Map data) {
+        log.debug("获取服务器连接状态 : {}");
+        return new Result(monitorService.getSerivceIpStatus(data));
+    }
+
+    @ApiOperation("获取服务器监控状态")
+    @PostMapping(value = "/getSerivceMonitorStatus")
+    public Result getSerivceMonitorStatus(@RequestBody Map data) {
+        log.debug("获取服务器监控状态 : {}");
+        return new Result(monitorService.getSerivceMonitorStatus(data));
+    }
 
 }

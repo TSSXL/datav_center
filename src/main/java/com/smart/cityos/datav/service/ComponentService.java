@@ -3,7 +3,13 @@ package com.smart.cityos.datav.service;
 import com.smart.cityos.datav.domain.Component;
 import com.smart.cityos.datav.domain.model.ComponentModel;
 import com.smart.cityos.datav.repository.ComponentRepository;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -74,5 +80,16 @@ public class ComponentService {
 
   public  Component get(String id){
     return  componentRepository.findOne(id);
+  }
+
+  public List<Map> getDayFormat(Map map){
+    List<Map> result=new ArrayList<>();
+    SimpleDateFormat dFormat = new SimpleDateFormat(map.get("format").toString());
+    Map dMap=new HashMap();
+    dMap.put("value",dFormat.format(new java.util.Date()));
+
+    result.add(dMap);
+
+    return result;
   }
 }
