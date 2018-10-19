@@ -1,25 +1,21 @@
-package com.smart.cityos.datav.domain;
+package com.smart.cityos.datav.domain.model;
 
-import java.util.List;
+import com.smart.cityos.datav.domain.RestfulConfig;
+import com.smart.cityos.datav.domain.TransScript;
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 
 /**
  * <p>title:</p>
  * <p>description:</p>
  *
  * @author: beckfun
- * @date Created in 2018-10-15
+ * @date Created in 2018-10-19
  * @modified By beckfun
  */
 @Getter
 @Setter
-public class ApiSource {
-
-  @Id
-  private String id;
+public class ApiSourceModel {
   private String name;
   private String desc;
   private RestfulConfig apiParam;

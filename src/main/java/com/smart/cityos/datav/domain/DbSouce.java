@@ -1,9 +1,7 @@
 package com.smart.cityos.datav.domain;
 
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -11,17 +9,22 @@ import org.springframework.data.annotation.Id;
  * <p>description:</p>
  *
  * @author: beckfun
- * @date Created in 2018-10-15
+ * @date Created in 2018-10-19
  * @modified By beckfun
  */
 @Getter
 @Setter
-public class ApiSource {
+public class DbSouce {
 
   @Id
   private String id;
   private String name;
   private String desc;
-  private RestfulConfig apiParam;
-  private TransScript transScript;
+  private String type;
+  private String addr;
+  private String port;
+  private String instance;
+  private String characterSet;
+  private String loginUsername;
+  private String loginPassword;
 }
