@@ -66,6 +66,11 @@ public class ScreenController {
     public void edit(@PathVariable String id, @RequestBody ScreenModel screenModel) {
       screenService.edit(id, screenModel);
   }
+  @GetMapping( "/copy/{id}")
+  @ApiOperation("根据ID更新可视化应用")
+  public  String  copyScreen(@PathVariable String id) {
+    return screenService.copy(id);
+  }
 
   @DeleteMapping("/{id}")
   @ApiOperation("删除可视化设计")

@@ -29,11 +29,11 @@ public class ScreenService {
 
     public Page<Screen> fetch(ScreenQueryBody screenQueryBody, Pageable pageable) {
         if (screenQueryBody == null || screenQueryBody.getRefApp() == null || screenQueryBody
-                .getRefApp().isEmpty()) {
+            .getRefApp().isEmpty()) {
             return screenRepository.findAll(pageable);
         } else {
             return screenRepository
-                    .findAllByRefApp(new ObjectId(screenQueryBody.getRefApp()), pageable);
+                .findAllByRefApp(new ObjectId(screenQueryBody.getRefApp()), pageable);
         }
     }
 
@@ -77,5 +77,13 @@ public class ScreenService {
 
     public void delete(String id) {
         screenRepository.delete(id);
+    }
+
+    public String copy(String id) {
+        Screen screen = screenRepository.findOne(id);
+        Screen screenShadow = (Screen) screen.clone();
+        screenShadow.setId(null);
+        screenRepository.save(screenShadow);
+        return screenShadow.getId();
     }
 }
