@@ -140,6 +140,9 @@ public class PollutionService {
         nowQuery.put("sql",sql);
         //获取最新记录
         List<Map> re=configFeignService.executeQuery(nowQuery);
+        if(re==null || re.size()==0){
+            return null;
+        }
         Map map=new HashMap();
         map.put("qy",re.get(0).get("QYMC"));
         List<Map> pk=new ArrayList<Map>();
@@ -150,6 +153,78 @@ public class PollutionService {
         });
         map.put("pk",pk);
         result.add(map);
+
+        return result;
+    }
+
+    /**
+     * 获取废水废气企业统计数量
+     *
+     * @return 12小时AQI趋势模型集合
+     */
+    public List<Map> getFsFqQyInfo(Map data) {
+
+        List<Map> result=new ArrayList<Map>();
+        String sql=""+data.get("sql");
+        Map nowQuery=new HashMap();
+        nowQuery.put("dbInfo",data.get("dbInfo"));
+        nowQuery.put("sql",sql);
+        //获取最新记录
+        List<Map> re=configFeignService.executeQuery(nowQuery);
+        re.forEach(r->{
+            Map map=new HashMap();
+            map.put("value",r.get("value"));
+            result.add(map);
+        });
+
+
+        return result;
+    }
+
+    /**
+     * 获取废水废气区域统计数量
+     *
+     * @return 12小时AQI趋势模型集合
+     */
+    public Map getFsFqAreaCount(Map data) {
+
+        Map result=new HashMap();
+        String sql=""+data.get("sql");
+        Map nowQuery=new HashMap();
+        nowQuery.put("dbInfo",data.get("dbInfo"));
+        nowQuery.put("sql",sql);
+        //获取最新记录
+        List<Map> re=configFeignService.executeQuery(nowQuery);
+        re.forEach(r->{
+            result.put(r.get("XZQYMC"),r.get("QYSL"));
+        });
+
+
+        return result;
+    }
+
+    /**
+     * 获取废水废气区域统计排口数量
+     *
+     * @return 12小时AQI趋势模型集合
+     */
+    public List<Map> getFsFqAreaPkCount(Map data) {
+
+        List<Map> result=new ArrayList<>();
+        String sql=""+data.get("sql");
+        Map nowQuery=new HashMap();
+        nowQuery.put("dbInfo",data.get("dbInfo"));
+        nowQuery.put("sql",sql);
+        //获取最新记录
+        List<Map> re=configFeignService.executeQuery(nowQuery);
+        re.forEach(r->{
+            Map map=new HashMap();
+            map.put("s","1");
+            map.put("y",r.get("PKSL"));
+            map.put("x",r.get("XZQYMC"));
+            result.add(map);
+        });
+
 
         return result;
     }

@@ -66,5 +66,26 @@ public class pollutionController {
         return new Result(pollutionService.getFsQyInfo(data));
     }
 
+    @ApiOperation("获取废水废气企业统计数量")
+    @PostMapping(value = "/getFsFqQyInfo")
+    public Result getFsFqQyInfo(@RequestBody Map data) {
+        log.debug("获取废水废气企业统计数量 : {}");
+        return new Result(pollutionService.getFsFqQyInfo(data));
+    }
+
+    @ApiOperation("获取废水废气区域统计数量")
+    @PostMapping(value = "/getFsFqAreaCount")
+    public Result getFsFqAreaCount(@RequestBody Map data) {
+        log.debug("获取废水废气区域统计数量 : {}");
+        return new Result(pollutionService.getFsFqAreaCount(data));
+    }
+
+    @ApiOperation("获取废水废气区域统计排口数量")
+    @PostMapping(value = "/getFsFqAreaPkCount")
+    public Result getFsFqAreaPkCount(@RequestBody Map data) {
+        log.debug("获取废水废气区域统计排口数量 : {}");
+        return new Result(pollutionService.getFsFqAreaPkCount(data));
+    }
+
 
 }
