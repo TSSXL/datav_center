@@ -37,12 +37,20 @@ public class ServerService {
         Map re=serverFeignService.getTaskCount(data);
         Map da=(Map)re.get("data");
         List<Map> res=(List)da.get("results");
-        res.forEach(r->{
+        if(res.size()>0){
+            res.forEach(r->{
+                Map map=new HashMap();
+                map.put("value",r.get("scount"));
+                map.put("url","");
+                result.add(map);
+            });
+        }else{
             Map map=new HashMap();
-            map.put("value",r.get("scount"));
+            map.put("value",0);
             map.put("url","");
             result.add(map);
-        });
+        }
+
 
 
         return result;
