@@ -1,6 +1,7 @@
 package com.smart.cityos.datav.web.rest;
 
 import com.smart.cityos.datav.domain.Screen;
+import com.smart.cityos.datav.domain.model.QueryBody;
 import com.smart.cityos.datav.domain.model.ScreenModel;
 import com.smart.cityos.datav.domain.model.ScreenQueryBody;
 import com.smart.cityos.datav.service.ScreenService;
@@ -46,12 +47,27 @@ public class ScreenController {
   @PostMapping("/list/cover")
   @ApiOperation("可视化设计列表接口")
   public Page<Screen> list(@RequestParam Long currentPage, @RequestParam Long pageSize,
-      @RequestParam String sort, @RequestParam Long order,@RequestBody List< ScreenQueryBody> screenQueryBody) {
+      @RequestParam String sort, @RequestParam Long order,@RequestBody List<QueryBody> queryBodies) {
     Sort sort1 = new Sort((order.equals(1) ? Direction.ASC : Direction.DESC),
         (sort.isEmpty() ? "_id" : sort));
     Pageable pageable = new PageRequest((currentPage.intValue() - 1), pageSize.intValue(), sort1);
+    String name = "";
+    String refApp = "";
+    for (QueryBody queryBody : queryBodies) {
+      switch (queryBody.getName()) {
+        case "name":
+          name = queryBody.getValue();
+          break;
+        case "refApp":
+          refApp = queryBody.getValue();
+          break;
+        default:
+          break;
+      }
+    }
+
     return screenService
-        .fetch(screenQueryBody.size() > 0 ? screenQueryBody.get(0) : null, pageable);
+        .fetch(name, refApp, pageable);
   }
 
     @PostMapping("")
