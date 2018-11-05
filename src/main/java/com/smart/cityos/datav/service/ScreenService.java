@@ -27,7 +27,7 @@ public class ScreenService {
     @Autowired
     private ScreenRepository screenRepository;
 
-    public Page<Screen> fetch(String name,String refApp, Pageable pageable) {
+    public Page<Screen> fetch(String name, String refApp, Pageable pageable) {
         if (name.isEmpty() && refApp.isEmpty()) {
             return screenRepository.findAll(pageable);
         } else {
@@ -83,6 +83,19 @@ public class ScreenService {
         Screen screenShadow = (Screen) screen.clone();
         screenShadow.setId(null);
         screenRepository.save(screenShadow);
+        return screenShadow.getId();
+    }
+
+    /**
+     * 设计发布
+     * @param id
+     * @return
+     */
+    public String publish(String id) {
+        Screen screen = screenRepository.findOne(id);
+        Screen screenShadow = screen.publish();
+        screenRepository.save(screenShadow);
+        screenRepository.save(screen);
         return screenShadow.getId();
     }
 }

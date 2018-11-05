@@ -19,6 +19,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "screens")
 public class Screen implements Cloneable {
 
+  public Screen() {
+    state = 0L;
+  }
+
   @Id
   private String id;
   /**
@@ -61,6 +65,15 @@ public class Screen implements Cloneable {
    * 组件
    */
   private List<Object> components;
+
+  private Long state;
+
+  public Screen publish() {
+    Screen copyVersion = (Screen) clone();
+    copyVersion.setId(null);
+    this.state = 1L;
+    return copyVersion;
+  }
 
   @Override
   public Object clone() {

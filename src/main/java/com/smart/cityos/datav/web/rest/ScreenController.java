@@ -47,7 +47,8 @@ public class ScreenController {
   @PostMapping("/list/cover")
   @ApiOperation("可视化设计列表接口")
   public Page<Screen> list(@RequestParam Long currentPage, @RequestParam Long pageSize,
-      @RequestParam String sort, @RequestParam Long order,@RequestBody List<QueryBody> queryBodies) {
+      @RequestParam String sort, @RequestParam Long order,
+      @RequestBody List<QueryBody> queryBodies) {
     Sort sort1 = new Sort((order.equals(1) ? Direction.ASC : Direction.DESC),
         (sort.isEmpty() ? "_id" : sort));
     Pageable pageable = new PageRequest((currentPage.intValue() - 1), pageSize.intValue(), sort1);
@@ -70,21 +71,22 @@ public class ScreenController {
         .fetch(name, refApp, pageable);
   }
 
-    @PostMapping("")
-    @ApiOperation("新增可视化设计")
-    public String add(@RequestBody ScreenModel screenModel) {
-      Screen screen = screenService.add(screenModel);
-      return screen.getId();
-    }
-
-    @PutMapping("/{id}")
-    @ApiOperation("编辑可视化设计")
-    public void edit(@PathVariable String id, @RequestBody ScreenModel screenModel) {
-      screenService.edit(id, screenModel);
+  @PostMapping("")
+  @ApiOperation("新增可视化设计")
+  public String add(@RequestBody ScreenModel screenModel) {
+    Screen screen = screenService.add(screenModel);
+    return screen.getId();
   }
-  @GetMapping( "/copy/{id}")
+
+  @PutMapping("/{id}")
+  @ApiOperation("编辑可视化设计")
+  public void edit(@PathVariable String id, @RequestBody ScreenModel screenModel) {
+    screenService.edit(id, screenModel);
+  }
+
+  @GetMapping("/copy/{id}")
   @ApiOperation("根据ID更新可视化应用")
-  public  String  copyScreen(@PathVariable String id) {
+  public String copyScreen(@PathVariable String id) {
     return screenService.copy(id);
   }
 
@@ -98,5 +100,15 @@ public class ScreenController {
   @ApiOperation("")
   public Screen get(@PathVariable String id) {
     return screenService.get(id);
+  }
+
+  /**
+   *
+   * @param id
+   */
+  @PostMapping("/{id}")
+  @ApiOperation("对指定可视化设计进行发布操作")
+  public void publish(@PathVariable String id) {
+    screenService.publish(id);
   }
 }

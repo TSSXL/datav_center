@@ -12,6 +12,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +30,7 @@ import org.springframework.stereotype.Service;
  * @modified By beckfun
  */
 @Service
-public class ApiSourceService {
+public class ApiSourceService implements ISourceService {
 
   @Autowired
   private ApiSourceRepository apiSourceRepository;
@@ -138,9 +142,10 @@ public class ApiSourceService {
     apiSourceRepository.save(apiSource);
   }
 
-  public void delete(String id){
+  public void delete(String id) {
     apiSourceRepository.delete(id);
   }
+
   public void edit(String id, ApiSourceModel apiSourceModel) {
     ApiSource apiSource = apiSourceRepository.findOne(id);
     apiSource.setName(apiSourceModel.getName());
@@ -153,6 +158,37 @@ public class ApiSourceService {
   public Page<ApiSource> fetch(String name, Pageable pageable) {
     return name == null || name.isEmpty() ? apiSourceRepository.findAll(pageable)
         : apiSourceRepository.findAllByNameLike(name, pageable);
+  }
+
+  @Override
+  public String getType() {
+    return "Api";
+  }
+
+  @Override
+  public Object getContent(String id) {
+    ApiSource apiSource = get(id);
+    RestfulConfig restfulConfig = apiSource.getApiParam();
+    Object object = remoteRESTfulApi(restfulConfig);
+
+    if (apiSource.getTransScript() != null && apiSource.getTransScript().getFormatMessage() != null
+        && !apiSource.getTransScript().getFormatMessage().isEmpty()) {
+      ScriptEngineManager manager = new ScriptEngineManager();
+      ScriptEngine engine = manager.getEngineByName("JavaScript");
+
+      engine.put("o", object);
+
+      try {
+        String javaScript =
+            "var t={};" + apiSource.getTransScript().getTranslatorScriptContent() + "t;";
+        Object result = engine.eval(javaScript);
+        JSONObject jsonObject= JSONObject.fromObject(result);
+        //jsonObject.has()
+      } catch (ScriptException e) {
+        e.printStackTrace();
+      }
+    }
+    return object;
   }
 
   public ApiSource get(String id) {

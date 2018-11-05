@@ -274,7 +274,7 @@ public class TestApiService {
      */
     public List<Map> returnBaseScatterData(Map data) {
 
-        List<Map> result=new ArrayList<Map>();
+        List<Map> result= new ArrayList<>();
         Map m1=new HashMap();
         m1.put("s","1");
         m1.put("y",123);
@@ -324,9 +324,8 @@ public class TestApiService {
      */
     public Map returnPiePercentData(Map data) {
 
-        Map result=new HashMap();
+        Map result=new HashMap(1);
         result.put("value",57);
-
 
         return result;
     }
@@ -338,17 +337,16 @@ public class TestApiService {
      */
     public List<Map> returnPieMultiPercentData(Map data) {
 
-        List<Map> result=new ArrayList<Map>();
-        Map m1=new HashMap();
+        List<Map> result= new ArrayList<>();
+        Map m1=new HashMap(2);
         m1.put("value",57);
         m1.put("total",235);
-        Map m2=new HashMap();
+        Map m2=new HashMap(2);
         m2.put("value",23);
         m2.put("total",180);
-        Map m3=new HashMap();
+        Map m3=new HashMap(2);
         m3.put("value",123);
         m3.put("total",170);
-
 
         result.add(m1);
         result.add(m2);
