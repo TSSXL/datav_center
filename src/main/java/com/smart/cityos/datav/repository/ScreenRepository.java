@@ -24,5 +24,5 @@ public interface ScreenRepository extends MongoRepository<Screen, String> {
    * @param pageable
    * @return
    */
-  Page<Screen> findAllByRefApp(ObjectId refApp, Pageable pageable);
+  Page<Screen> findAllByRefAppAndNameLike(ObjectId refApp, String name, Pageable pageable);
 }
