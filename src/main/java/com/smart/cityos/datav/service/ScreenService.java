@@ -5,7 +5,7 @@ import com.smart.cityos.datav.domain.model.ScreenModel;
 import com.smart.cityos.datav.domain.model.ScreenQueryBody;
 import com.smart.cityos.datav.repository.ScreenRepository;
 
-import java.util.Calendar;
+import java.util.*;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,5 +85,28 @@ public class ScreenService {
         screenShadow.setId(null);
         screenRepository.save(screenShadow);
         return screenShadow.getId();
+    }
+
+    /**
+     * 获取可视化总数
+     *
+     * @return
+     */
+    public List<Map> getScreenCount(Map data) {
+
+        List<Map> result=new ArrayList<Map>();
+        //如果没有参数则置为空，前台不能为空所以后台判断
+        if(data.get("param")==null){
+            data=new HashMap();
+        }
+
+        //获取最新记录
+        List list=screenRepository.findAll();
+        Map map=new HashMap();
+        map.put("value",list.size());
+        map.put("url","");
+        result.add(map);
+
+        return result;
     }
 }

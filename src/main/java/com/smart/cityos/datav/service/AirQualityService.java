@@ -104,19 +104,49 @@ public class AirQualityService {
                 log.error("日期格式转换错误", e);
             }
             if (aqi < 50) {
+                list.add(0,new AQI7days(dateStr, 0, "6"));
+                list.add(0,new AQI7days(dateStr, 0, "5"));
+                list.add(0,new AQI7days(dateStr, 0, "4"));
                 list.add(0,new AQI7days(dateStr, 0, "3"));
                 list.add(0,new AQI7days(dateStr, 0, "2"));
                 list.add(0,new AQI7days(dateStr, aqi, "1"));
 
             } else if (aqi >= 50 && aqi<100) {
+                list.add(0,new AQI7days(dateStr, 0, "6"));
+                list.add(0,new AQI7days(dateStr, 0, "5"));
+                list.add(0,new AQI7days(dateStr, 0, "4"));
                 list.add(0,new AQI7days(dateStr, 0, "3"));
                 list.add(0,new AQI7days(dateStr, aqi, "2"));
                 list.add(0,new AQI7days(dateStr, 0, "1"));
-            } else if (aqi >= 100) {
+            } else if (aqi >= 100 && aqi<150) {
+                list.add(0,new AQI7days(dateStr, 0, "6"));
+                list.add(0,new AQI7days(dateStr, 0, "5"));
+                list.add(0,new AQI7days(dateStr, 0, "4"));
                 list.add(0,new AQI7days(dateStr, aqi, "3"));
                 list.add(0,new AQI7days(dateStr, 0, "2"));
                 list.add(0,new AQI7days(dateStr, 0, "1"));
 
+            }else if(aqi >= 150 && aqi<200){
+                list.add(0,new AQI7days(dateStr, 0, "6"));
+                list.add(0,new AQI7days(dateStr, 0, "5"));
+                list.add(0,new AQI7days(dateStr, aqi, "4"));
+                list.add(0,new AQI7days(dateStr, 0, "3"));
+                list.add(0,new AQI7days(dateStr, 0, "2"));
+                list.add(0,new AQI7days(dateStr, 0, "1"));
+            }else if(aqi >= 200 && aqi<300){
+                list.add(0,new AQI7days(dateStr, 0, "6"));
+                list.add(0,new AQI7days(dateStr, aqi, "5"));
+                list.add(0,new AQI7days(dateStr, 0, "4"));
+                list.add(0,new AQI7days(dateStr, 0, "3"));
+                list.add(0,new AQI7days(dateStr, 0, "2"));
+                list.add(0,new AQI7days(dateStr, 0, "1"));
+            }else if(aqi>=300){
+                list.add(0,new AQI7days(dateStr, aqi, "6"));
+                list.add(0,new AQI7days(dateStr, 0, "5"));
+                list.add(0,new AQI7days(dateStr, 0, "4"));
+                list.add(0,new AQI7days(dateStr, 0, "3"));
+                list.add(0,new AQI7days(dateStr, 0, "2"));
+                list.add(0,new AQI7days(dateStr, 0, "1"));
             }
         });
         return list;
@@ -234,14 +264,23 @@ public class AirQualityService {
                     station.put("PrimaryPollutant",ss.get("PrimaryPollutant")==null?'-':ss.get("PrimaryPollutant"));
                     int aqi=Integer.parseInt(String.valueOf(ss.get("AQI")));
                     if(aqi<50){
-                        station.put("color","#6cd888");
+                        station.put("color","#55c300");
                         station.put("status","优");
                     }else if(aqi>=50 && aqi<100){
-                        station.put("color","#fff280");
+                        station.put("color","#f3cb00");
                         station.put("status","良");
-                    }else if(aqi>=100){
-                        station.put("color","#ff688f");
+                    }else if(aqi>=100 && aqi<150){
+                        station.put("color","#ff9300");
                         station.put("status","轻度污染");
+                    }else if(aqi>=150 && aqi<200){
+                        station.put("color","#ff2c1a");
+                        station.put("status","中度污染");
+                    }else if(aqi>=200 && aqi<300){
+                        station.put("color","#ed2fa7");
+                        station.put("status","重度污染");
+                    }else if(aqi>=300){
+                        station.put("color","#c52820");
+                        station.put("status","严重污染");
                     }
                     result.add(station);
 
@@ -259,6 +298,7 @@ public class AirQualityService {
      * @return
      */
     public List<Map> getStationInfoMap(Map data){
+
 
         //查询所有站点信息
         String stationSql=""+data.get("stationSql");
@@ -279,7 +319,7 @@ public class AirQualityService {
         List<Map> status=configFeignService.executeQuery(statusQuery);
 
         //将站点信息和实时信息合并
-        List<Map> result=returnStationStatusMap(stations,status);
+        List<Map> result=returnStationStatusMap(stations,status,data);
 
 
         return result;
@@ -292,7 +332,10 @@ public class AirQualityService {
      * @param status
      * @return
      */
-    public List<Map> returnStationStatusMap(List<Map> stations,List<Map> status){
+    public List<Map> returnStationStatusMap(List<Map> stations,List<Map> status,Map data){
+
+        String address=data.get("address").toString();
+        List icons=(List)data.get("icons");
         List<Map> result=new ArrayList<Map>();
         for(int i=0;i<stations.size();i++){
             Map station=stations.get(i);
@@ -312,17 +355,22 @@ public class AirQualityService {
                     }
 
                     int aqi=Integer.parseInt(String.valueOf(ss.get("AQI")));
-                    Map nomal=new HashMap();
-                    Map color=new HashMap();
+
                     if(aqi<50){
-                        color.put("color","#6cd888");
+                        map.put("symbol","image://"+address+icons.get(0));
                     }else if(aqi>=50 && aqi<100){
-                        color.put("color","#fff280");
-                    }else if(aqi>=100){
-                        color.put("color","#ff688f");
+                        map.put("symbol","image://"+address+icons.get(1));
+                    }else if(aqi>=100 && aqi<150){
+                        map.put("symbol","image://"+address+icons.get(2));
+                    }else if(aqi>=150 && aqi<200){
+                        map.put("symbol","image://"+address+icons.get(3));
+                    }else if(aqi>=200 && aqi<300){
+                        map.put("symbol","image://"+address+icons.get(4));
+                    }else if(aqi>=300){
+                        map.put("symbol","image://"+address+icons.get(5));
                     }
-                    nomal.put("normal",color);
-                    map.put("itemStyle",nomal);
+
+
                     result.add(map);
 
                 }
@@ -391,12 +439,20 @@ public class AirQualityService {
                     map.put("formatTime",ss.get("formatTime"));
                     int aqi=Integer.parseInt(String.valueOf(ss.get("AQI")));
                     if(aqi<50){
-                        map.put("AQIStyle","color:#6cd888;font-size:25px;");
+                        map.put("AQIStyle","color:#55c300;font-size:25px;");
                     }else if(aqi>=50 && aqi<100){
-                        map.put("AQIStyle","color:#fff280;font-size:25px;");
-                    }else if(aqi>=100){
-                        map.put("AQIStyle","color:#ff688f;font-size:25px;");
+                        map.put("AQIStyle","color:#f3cb00;font-size:25px;");
+                    }else if(aqi>=100 && aqi<150){
+                        map.put("AQIStyle","color:#ff9300;font-size:25px;");
+                    }else if(aqi>=150 && aqi<200){
+                        map.put("AQIStyle","color:#ff2c1a;font-size:25px;");
+                    }else if(aqi>=200 && aqi<300){
+                        map.put("AQIStyle","color:#ed2fa7;font-size:25px;");
+                    }else if(aqi>=300){
+                        map.put("AQIStyle","color:#c52820;font-size:25px;");
                     }
+
+
                     result.add(map);
 
                 }
@@ -504,6 +560,7 @@ public class AirQualityService {
     public List<Map> getCityStationInfo(Map data){
 
 
+        List icons=(List)data.get("icons");
         //根据站点条数获取最新的实时信息
         String sql=""+data.get("sql");
 
@@ -521,8 +578,14 @@ public class AirQualityService {
             map.put("status","优");
         }else if(aqi>=50 && aqi<100){
             map.put("status","优");
-        }else if(aqi>=100){
+        }else if(aqi>=100 && aqi<150){
             map.put("status","轻度污染");
+        }else if(aqi>=150 && aqi<200){
+            map.put("status","中度污染");
+        }else if(aqi>=200 && aqi<300){
+            map.put("status","重度污染");
+        }else if(aqi>=300){
+            map.put("status","严重污染");
         }
 
         List<Map> result=new ArrayList<Map>();

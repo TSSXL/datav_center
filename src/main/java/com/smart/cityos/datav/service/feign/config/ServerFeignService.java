@@ -45,14 +45,6 @@ public class ServerFeignService {
         return list;
     }
 
-    /**
-     * 通过feign获取任务总数
-     */
-    public Map getScreenCount(Map executeQueryParam) {
-        FeignServer feignServer = createServerFeignServer();
-        Map list = feignServer.getScreenCount(executeQueryParam);
-        return list;
-    }
 
     /**
      * 获取应用列表

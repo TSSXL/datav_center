@@ -56,28 +56,7 @@ public class ServerService {
         return result;
     }
 
-    /**
-     * 获取可视化总数
-     *
-     * @return
-     */
-    public List<Map> getScreenCount(Map data) {
 
-        List<Map> result=new ArrayList<Map>();
-        //如果没有参数则置为空，前台不能为空所以后台判断
-        if(data.get("param")==null){
-            data=new HashMap();
-        }
-
-        //获取最新记录
-        Map re=serverFeignService.getScreenCount(data);
-        Map map=new HashMap();
-        map.put("value",re.get("data"));
-        map.put("url","");
-        result.add(map);
-
-        return result;
-    }
 
 
 }
