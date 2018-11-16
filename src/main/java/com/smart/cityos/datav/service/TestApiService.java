@@ -1,6 +1,7 @@
 package com.smart.cityos.datav.service;
 
 import com.smart.cityos.datav.service.feign.config.ConfigFeignService;
+import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -273,37 +274,37 @@ public class TestApiService {
      * @return 基本散点图样本数据
      */
     public List<Map> returnBaseScatterData(Map data) {
-
+        Random ra =new Random();
         List<Map> result= new ArrayList<>();
         Map m1=new HashMap();
         m1.put("s","1");
-        m1.put("y",123);
-        m1.put("x",210);
+        m1.put("y",ra.nextInt(100));
+        m1.put("x",ra.nextInt(100));
 
         Map m2=new HashMap();
         m2.put("s","1");
-        m2.put("y",345);
-        m2.put("x",190);
+        m2.put("y",ra.nextInt(100));
+        m2.put("x",ra.nextInt(100));
 
         Map m3=new HashMap();
         m3.put("s","2");
-        m3.put("y",123);
-        m3.put("x",568);
+        m3.put("y",ra.nextInt(100));
+        m3.put("x",ra.nextInt(100));
 
         Map m4=new HashMap();
         m4.put("s","2");
-        m4.put("y",411);
-        m4.put("x",123);
+        m4.put("y",ra.nextInt(100));
+        m4.put("x",ra.nextInt(100));
 
         Map m5=new HashMap();
         m5.put("s","3");
-        m5.put("y",234);
-        m5.put("x",123);
+        m5.put("y",ra.nextInt(100));
+        m5.put("x",ra.nextInt(100));
 
         Map m6=new HashMap();
         m6.put("s","3");
-        m6.put("y",712);
-        m6.put("x",183);
+        m6.put("y",ra.nextInt(100));
+        m6.put("x",ra.nextInt(100));
 
 
 

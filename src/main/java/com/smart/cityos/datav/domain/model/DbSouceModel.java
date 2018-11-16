@@ -24,4 +24,5 @@ public class DbSouceModel {
   private String desc;
   private String loginUsername;
   private String loginPassword;
+  private String sql;
 }

@@ -27,4 +27,6 @@ public class DbSouce {
   private String characterSet;
   private String loginUsername;
   private String loginPassword;
+  private String sql;
+  private TransScript transScript;
 }

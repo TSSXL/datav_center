@@ -11,10 +11,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import net.sf.ezmorph.bean.MorphDynaBean;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -182,15 +187,85 @@ public class ApiSourceService implements ISourceService {
         String javaScript =
             "var t={};" + apiSource.getTransScript().getTranslatorScriptContent() + "t;";
         Object result = engine.eval(javaScript);
-        JSONObject jsonObject= JSONObject.fromObject(result);
-        //jsonObject.has()
+
+        JSONObject jsonObject = JSONObject.fromObject(result);
+        Map<String, Object> map = (Map<String, Object>) JSONObject.toBean(jsonObject, Map.class);
+        object = judge(map);
+
       } catch (ScriptException e) {
         e.printStackTrace();
       }
     }
-    return object;
+    JSONObject result = new JSONObject();
+    result.put("code", 20000);
+    result.put("data", object);
+    return result;
   }
 
+  private Object judge(Map<String, Object> map) {
+    List<String> keys = map.keySet().stream().filter(x -> isNumber(x)).sorted()
+        .collect(Collectors.toList());
+    if (keys.size() == map.keySet().size() && isOrderNumeric(String.join("", keys))) {
+      JSONArray jsonArray = new JSONArray();
+      for (String key : keys
+      ) {
+        Object object = map.get(key);
+        Map<String, Object> temp = (Map<String, Object>) JSONObject
+            .toBean(JSONObject.fromObject(object), Map.class);
+        jsonArray.add(judge(temp));
+      }
+      return jsonArray;
+    } else {
+      JSONObject jsonObject = new JSONObject();
+      for (String key : map.keySet()) {
+
+        Object value = map.get(key);
+        if (value instanceof MorphDynaBean) {
+          Map<String, Object> temp = (Map<String, Object>) JSONObject
+              .toBean(JSONObject.fromObject(map.get(key)), Map.class);
+          jsonObject.put(key, judge(temp));
+        } else {
+          jsonObject.put(key, value);
+        }
+      }
+      return jsonObject;
+    }
+  }
+
+
+  public boolean isNumber(String str) {
+    String reg = "^[0-9]+(.[0-9]+)?$";
+    return str.matches(reg);
+  }
+
+  public boolean isOrderNumeric(String numOrStr) {
+    boolean flag = true;
+    for (int i = 0; i < numOrStr.length(); i++) {
+      if (i > 0) {
+        // 判断如123456
+        int num = Integer.parseInt(numOrStr.charAt(i) + "");
+        int num_ = Integer.parseInt(numOrStr.charAt(i - 1) + "") + 1;
+        if (num != num_) {
+          flag = false;
+          break;
+        }
+      }
+    }
+    if (!flag) {
+      for (int i = 0; i < numOrStr.length(); i++) {
+        if (i > 0) {
+          // 判断如654321
+          int num = Integer.parseInt(numOrStr.charAt(i) + "");
+          int num_ = Integer.parseInt(numOrStr.charAt(i - 1) + "") - 1;
+          if (num != num_) {
+            flag = false;
+            break;
+          }
+        }
+      }
+    }
+    return flag;
+  }
   public ApiSource get(String id) {
     return apiSourceRepository.findOne(id);
   }

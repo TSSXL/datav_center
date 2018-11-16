@@ -9,6 +9,7 @@ import com.smart.cityos.datav.domain.model.SourceInfo;
 import com.smart.cityos.datav.service.DbSourceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,8 +52,8 @@ public class DbSouceController {
 
   @PostMapping("/test")
   @ApiOperation("")
-  public Object test(@RequestBody RestfulConfig restfulConfig) {
-    return null;
+  public Object test(@RequestBody DbSouce dbSouce) throws SQLException {
+    return dbSourceService.getSelect(dbSouce);
   }
   @PostMapping("")
   @ApiOperation("")
@@ -74,13 +75,13 @@ public class DbSouceController {
 
   @PostMapping("/")
   @ApiOperation("分页获取组件信息")
-  public Page<DbSourceInfo> list(@RequestParam Long pageNo, @RequestParam Long pageSize,
+  public Page<DbSourceInfo> list(@RequestParam Long currentPage, @RequestParam Long pageSize,
       @RequestParam String sort, @RequestParam Long order,
       @RequestBody List<QueryBody> queryBodies) {
 
     Sort sort1 = new Sort((order.equals(1) ? Direction.ASC : Direction.DESC),
         (sort.isEmpty() ? "_id" : sort));
-    Pageable pageable = new PageRequest(pageNo.intValue() - 1, pageSize.intValue(), sort1);
+    Pageable pageable = new PageRequest(currentPage.intValue() - 1, pageSize.intValue(), sort1);
     Optional<QueryBody> optionalQueryBody = queryBodies.stream()
         .filter(x -> "name".equals(x.getName())).findFirst();
 

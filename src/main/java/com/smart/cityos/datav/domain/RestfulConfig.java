@@ -1,6 +1,5 @@
 package com.smart.cityos.datav.domain;
 
-import com.smart.cityos.datav.domain.KeyValue;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
