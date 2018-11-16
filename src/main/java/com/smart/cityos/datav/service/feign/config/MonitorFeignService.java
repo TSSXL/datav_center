@@ -276,18 +276,30 @@ public class MonitorFeignService {
 
         List<Map> re=feignServer.getMonitorStatusByType(data);
 
+        boolean flag=false;
         //循环生成状态
         for(int i=0;i<3;i++){
             Map map=new HashMap();
             map.put("value",0);
             int index=i;
-            re.forEach(r->{
+            for(int k=0;k<re.size();k++){
+                Map r=re.get(k);
                 if(Integer.parseInt(r.get("_id").toString())==index){
                     map.put("value",r.get("count"));
+                    flag=true;
                 }
-            });
+            };
             result.add(map);
         }
+
+        //如果结果全为0，则清空List重新赋值
+        if(!flag){
+            result.clear();
+            Map map=new HashMap();
+            map.put("value",0);
+            result.add(map);
+        }
+
 
         return result;
 

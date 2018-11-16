@@ -1,5 +1,6 @@
 package com.smart.cityos.datav.web.rest;
 
+import com.smart.cityos.datav.domain.Result;
 import com.smart.cityos.datav.domain.Screen;
 import com.smart.cityos.datav.domain.model.QueryBody;
 import com.smart.cityos.datav.domain.model.ScreenModel;
@@ -8,6 +9,8 @@ import com.smart.cityos.datav.service.ScreenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,5 +113,12 @@ public class ScreenController {
   @ApiOperation("对指定可视化设计进行发布操作")
   public void publish(@PathVariable String id) {
     screenService.publish(id);
+  }
+
+  @ApiOperation("获取可视化总数")
+  @PostMapping(value = "/getScreenCount")
+  public Result getScreenCount(@RequestBody Map data) {
+    log.debug("获取可视化总数 : {}");
+    return new Result(screenService.getScreenCount(data));
   }
 }

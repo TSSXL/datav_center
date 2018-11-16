@@ -42,12 +42,7 @@ public class ServerController {
         return new Result(serverService.getTaskCount(data));
     }
 
-    @ApiOperation("获取可视化总数")
-    @PostMapping(value = "/screen/getScreenCount")
-    public Result getScreenCount(@RequestBody Map data) {
-        log.debug("获取可视化总数 : {}");
-        return new Result(serverService.getScreenCount(data));
-    }
+
 
 
 }
