@@ -1,6 +1,5 @@
 package com.smart.cityos.datav.service;
 
-import com.smart.cityos.datav.domain.ApiSource;
 import com.smart.cityos.datav.domain.DbSouce;
 import com.smart.cityos.datav.domain.model.DbSouceModel;
 import com.smart.cityos.datav.repository.DbSourceRepository;
@@ -10,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import sun.plugin.javascript.JSObject;
 
 /**
  * <p>title:</p>
