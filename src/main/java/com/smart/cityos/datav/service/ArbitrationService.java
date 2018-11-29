@@ -258,7 +258,7 @@ public class ArbitrationService {
         List<Map> list=new ArrayList<>();
 
         if("存案数".equals(data.get("type"))){
-            String sql="select base.*,IFNULL(se.count,0) from ("+baseSql+
+            String sql="select base.*,IFNULL(se.count,0) count from ("+baseSql+
                     ") base left join ("+cas+") se on base.F_case_decretary_id=se.F_case_decretary_id " +
                     "order by count asc";
 
