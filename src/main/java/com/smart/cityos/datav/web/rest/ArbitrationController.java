@@ -80,10 +80,10 @@ public class ArbitrationController {
         return new Result(arbitrationService.CountLasByAYuan(data));
     }
 
-    @ApiOperation("获取根据案源统计立案")
+    @ApiOperation("获取根据案由统计立案")
     @PostMapping(value = "/CountLasByAYou")
     public Result CountLasByAYou(@RequestBody Map data) {
-        log.debug("获取根据案源统计立案 : {}");
+        log.debug("获取根据案由统计立案 : {}");
         return new Result(arbitrationService.CountLasByAYou(data));
     }
 

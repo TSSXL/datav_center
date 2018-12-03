@@ -328,19 +328,32 @@ public class ArbitrationService {
         Map query=new HashMap();
         query.put("dbInfo",data.get("dbInfo"));
 
-        String sql1="select IFNULL(count(*),0) count from w_case_apply where F_case_amount <=1000 and F_filing_time is not null";
+        String monthSql=" and DATE_FORMAT(F_create_time,'%Y-%m')=DATE_FORMAT(curdate(),'%Y-%m')";
+        String jdSql=" and quarter(DATE_FORMAT(F_create_time,'%Y-%m-%d'))=quarter(curdate())";
+        String yearSql=" and DATE_FORMAT(F_create_time,'%Y')=DATE_FORMAT(curdate(),'%Y')";
+
+        String timeSql="";
+        if("month".equals(data.get("type"))){
+            timeSql=monthSql;
+        }else if("jd".equals(data.get("type"))){
+            timeSql=jdSql;
+        }else if("year".equals(data.get("type"))){
+            timeSql=yearSql;
+        }
+
+        String sql1="select IFNULL(count(*),0) count from w_case_apply where F_case_amount <=1000 and F_filing_time is not null"+timeSql;
         query.put("sql",sql1);
         List<Map> re1=configFeignService.executeQuery(query);
 
-        String sql2="select IFNULL(count(*),0) count from w_case_apply where F_case_amount >1000 and F_case_amount<=50000 and F_filing_time is not null";
+        String sql2="select IFNULL(count(*),0) count from w_case_apply where F_case_amount >1000 and F_case_amount<=50000 and F_filing_time is not null"+timeSql;
         query.put("sql",sql2);
         List<Map> re2=configFeignService.executeQuery(query);
 
-        String sql3="select IFNULL(count(*),0) count from w_case_apply where F_case_amount >5000 and F_case_amount<=100000 and F_filing_time is not null";
+        String sql3="select IFNULL(count(*),0) count from w_case_apply where F_case_amount >5000 and F_case_amount<=100000 and F_filing_time is not null"+timeSql;
         query.put("sql",sql3);
         List<Map> re3=configFeignService.executeQuery(query);
 
-        String sql4="select IFNULL(count(*),0) count from w_case_apply where F_case_amount >100000 and F_filing_time is not null";
+        String sql4="select IFNULL(count(*),0) count from w_case_apply where F_case_amount >100000 and F_filing_time is not null"+timeSql;
         query.put("sql",sql4);
         List<Map> re4=configFeignService.executeQuery(query);
 
@@ -376,8 +389,21 @@ public class ArbitrationService {
         Map query=new HashMap();
         query.put("dbInfo",data.get("dbInfo"));
 
+        String monthSql=" and DATE_FORMAT(F_create_time,'%Y-%m')=DATE_FORMAT(curdate(),'%Y-%m')";
+        String jdSql=" and quarter(DATE_FORMAT(F_create_time,'%Y-%m-%d'))=quarter(curdate())";
+        String yearSql=" and DATE_FORMAT(F_create_time,'%Y')=DATE_FORMAT(curdate(),'%Y')";
+
+        String timeSql="";
+        if("month".equals(data.get("type"))){
+            timeSql=monthSql;
+        }else if("jd".equals(data.get("type"))){
+            timeSql=jdSql;
+        }else if("year".equals(data.get("type"))){
+            timeSql=yearSql;
+        }
+
         String sql="select IFNULL(count(*),0) value,IFNULL(F_case_source,'空') name " +
-                "from w_case_apply where F_filing_time is not null " +
+                "from w_case_apply where F_filing_time is not null " +timeSql+
                 "group by F_case_source";
         query.put("sql",sql);
         List<Map> re=configFeignService.executeQuery(query);
@@ -406,10 +432,23 @@ public class ArbitrationService {
         Map query=new HashMap();
         query.put("dbInfo",data.get("dbInfo"));
 
+        String monthSql=" and DATE_FORMAT(F_create_time,'%Y-%m')=DATE_FORMAT(curdate(),'%Y-%m')";
+        String jdSql=" and quarter(DATE_FORMAT(F_create_time,'%Y-%m-%d'))=quarter(curdate())";
+        String yearSql=" and DATE_FORMAT(F_create_time,'%Y')=DATE_FORMAT(curdate(),'%Y')";
+
+        String timeSql="";
+        if("month".equals(data.get("type"))){
+            timeSql=monthSql;
+        }else if("jd".equals(data.get("type"))){
+            timeSql=jdSql;
+        }else if("year".equals(data.get("type"))){
+            timeSql=yearSql;
+        }
+
         String sql="select count(a.id) value,b.value_ name from w_case_apply a,(select * from w_dict where group_ ='cause') b " +
                 "where " +
                 "a.F_case_cause=b.key_ " +
-                "and a.F_filing_time is not null " +
+                "and a.F_filing_time is not null " +timeSql+
                 "group by a.F_case_cause";
         query.put("sql",sql);
         List<Map> re=configFeignService.executeQuery(query);
