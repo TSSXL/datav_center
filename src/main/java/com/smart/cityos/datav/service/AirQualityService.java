@@ -574,18 +574,25 @@ public class AirQualityService {
         Map map=new HashMap();
         map.put("aqiValue",aqi);
         map.put("main",newInfo.get(0).get("PrimaryPollutant")==null?'-':newInfo.get(0).get("PrimaryPollutant"));
+        map.put("pm",newInfo.get(0).get("PM25_1H").toString()==null?'-':Double.parseDouble(newInfo.get(0).get("PM25_1H").toString())*1000);
         if(aqi<50){
             map.put("status","优");
+            map.put("level","I级");
         }else if(aqi>=50 && aqi<100){
             map.put("status","优");
+            map.put("level","II级");
         }else if(aqi>=100 && aqi<150){
             map.put("status","轻度污染");
+            map.put("level","III级");
         }else if(aqi>=150 && aqi<200){
             map.put("status","中度污染");
+            map.put("level","IV级");
         }else if(aqi>=200 && aqi<300){
             map.put("status","重度污染");
+            map.put("level","V级");
         }else if(aqi>=300){
             map.put("status","严重污染");
+            map.put("level","VI级");
         }
 
         List<Map> result=new ArrayList<Map>();
